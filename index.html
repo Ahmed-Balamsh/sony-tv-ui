@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apple TV Launcher - Sony Android TV</title>
+    <!-- ربط ملف التعريف Manifest -->
     <link rel="manifest" href="./manifest.json">
-
     <style>
         /* ==========================================================================
-           [القسم 1: التنسيقات العامة والخطوط (CSS)]
+           [القسم 1: التنسيقات العامة وضبط الأبعاد لتناسب شاشة سوني 100%]
            ========================================================================== */
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap');
 
         * {
             box-sizing: border-box;
@@ -29,7 +29,6 @@
             position: relative;
         }
 
-        /* خلفية الشاشة الديناميكية التي تتغير حسب وقت اليوم */
         #bg-layer {
             position: absolute;
             top: 0;
@@ -42,18 +41,17 @@
             z-index: 1;
         }
 
-        /* طبقة التعتيم التدريجي لإبراز الشعارات والنصوص بوضوح */
         #bg-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.55) 50%, rgba(7,7,9,0.96) 100%);
+            background: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.55) 45%, rgba(7,7,9,0.96) 100%);
             z-index: 2;
         }
 
-        /* الحاوية الرئيسية للواجهة */
+        /* تقليل الهوامش الرأسية لتظهر أزرار المداخل HDMI في الأسفل بوضوح تام */
         #main-ui {
             position: relative;
             z-index: 3;
@@ -61,11 +59,11 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 38px 60px;
+            padding: 22px 48px 20px 48px;
         }
 
         /* ==========================================================================
-           [القسم 2: الشريط العلوي (الساعة، التاريخ، الصلاة، وأزرار التحكم)]
+           [القسم 2: الشريط العلوي]
            ========================================================================== */
         .top-bar {
             display: flex;
@@ -74,97 +72,99 @@
         }
 
         .clock-display {
-            font-size: 3rem;
+            font-size: 2.4rem;
             font-weight: 800;
-            letter-spacing: 1px;
-            text-shadow: 0 4px 15px rgba(0,0,0,0.6);
+            line-height: 1.1;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.7);
         }
 
         .sub-info {
-            font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.85);
-            margin-top: 4px;
+            font-size: 0.98rem;
+            color: rgba(255, 255, 255, 0.88);
+            margin-top: 2px;
         }
 
         .top-actions {
             display: flex;
-            gap: 14px;
+            gap: 12px;
         }
 
         .pill-btn {
             background: rgba(255, 255, 255, 0.14);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.22);
             color: #fff;
-            padding: 10px 22px;
-            border-radius: 30px;
-            font-size: 1rem;
+            padding: 8px 18px;
+            border-radius: 26px;
+            font-size: 0.95rem;
             font-family: inherit;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: transform 0.25s ease, background 0.25s ease;
+            transition: transform 0.22s ease, background 0.22s ease;
         }
 
         /* ==========================================================================
-           [القسم 3: المنطقة الوسطى + لوحة المباريات المباشرة بشعارات الأندية]
+           [القسم 3: المنطقة الوسطى + لوحة المباريات المصحّحة بدون رموز زائدة]
            ========================================================================== */
         .middle-section {
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
             margin-top: auto;
-            margin-bottom: 24px;
-            gap: 30px;
+            margin-bottom: 14px;
+            gap: 24px;
         }
 
         .hero-preview {
-            max-width: 50%;
+            max-width: 46%;
         }
 
         .hero-title {
-            font-size: 3.1rem;
+            font-size: 2.5rem;
             font-weight: 800;
-            margin-bottom: 6px;
-            text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            margin-bottom: 4px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.85);
         }
 
         .hero-subtitle {
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.82);
+            font-size: 1.08rem;
+            color: rgba(255, 255, 255, 0.85);
         }
 
-        /* صندوق المباريات المباشرة الزجاجي */
+        /* توسيع صندوق المباريات وتنسيقه بحيث لا تنكسر أسماء الأندية */
         .matches-panel {
-            background: rgba(18, 18, 24, 0.72);
+            background: rgba(16, 18, 24, 0.78);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            border-radius: 24px;
-            padding: 16px 22px;
-            min-width: 490px;
-            max-width: 530px;
-            box-shadow: 0 12px 35px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 12px 18px;
+            min-width: 520px;
+            max-width: 580px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.55);
         }
 
         .matches-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.95rem;
-            color: rgba(255, 255, 255, 0.78);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-            padding-bottom: 8px;
-            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+            padding-bottom: 6px;
+            margin-bottom: 8px;
         }
 
         .match-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 0;
-            font-size: 1rem;
+            padding: 6px 0;
+            font-size: 0.95rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            gap: 10px;
+            white-space: nowrap;
         }
 
         .match-row:last-child {
@@ -176,6 +176,7 @@
             align-items: center;
             gap: 8px;
             flex: 1;
+            overflow: hidden;
         }
 
         .team-item {
@@ -185,51 +186,50 @@
             font-weight: 700;
         }
 
-        /* تنسيق شعار النادي المصغر */
         .team-logo {
-            width: 26px;
-            height: 26px;
+            width: 24px;
+            height: 24px;
             object-fit: contain;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+            flex-shrink: 0;
         }
 
         .league-tag {
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             padding: 2px 7px;
             border-radius: 6px;
-            background: rgba(255, 255, 255, 0.14);
-            color: #e0e0e0;
-            margin-left: 4px;
+            background: rgba(255, 255, 255, 0.15);
+            color: #f0f0f0;
+            flex-shrink: 0;
         }
 
         .score-box {
-            background: rgba(255, 255, 255, 0.16);
-            padding: 3px 10px;
-            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.18);
+            padding: 2px 9px;
+            border-radius: 7px;
             font-weight: 800;
-            font-size: 1.05rem;
-            margin: 0 4px;
-            min-width: 58px;
+            font-size: 0.92rem;
+            min-width: 48px;
             text-align: center;
+            flex-shrink: 0;
         }
 
         .live-badge {
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            background: rgba(229, 45, 39, 0.28);
+            background: rgba(229, 45, 39, 0.3);
             color: #ff5252;
-            border: 1px solid rgba(255, 82, 82, 0.5);
+            border: 1px solid rgba(255, 82, 82, 0.55);
             padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.78rem;
+            border-radius: 10px;
+            font-size: 0.76rem;
             font-weight: 700;
-            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .live-dot {
-            width: 7px;
-            height: 7px;
+            width: 6px;
+            height: 6px;
             background-color: #ff3b30;
             border-radius: 50%;
             animation: pulse 1.2s infinite;
@@ -237,30 +237,30 @@
 
         @keyframes pulse {
             0% { opacity: 1; }
-            50% { opacity: 0.35; }
+            50% { opacity: 0.3; }
             100% { opacity: 1; }
         }
 
         /* ==========================================================================
-           [القسم 4: شريط Apple TV الزجاجي للشعارات المصورة + مداخل HDMI]
+           [القسم 4: شريط التطبيقات الزجاجي (إصلاح الشعارات 100% بنظام Flexbox)]
            ========================================================================== */
         .section-label {
-            font-size: 1.05rem;
-            color: rgba(255, 255, 255, 0.75);
-            margin-bottom: 10px;
-            font-weight: 500;
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.78);
+            margin-bottom: 6px;
+            font-weight: 600;
         }
 
         .apple-dock {
             display: flex;
-            gap: 22px;
+            gap: 18px;
             background: rgba(255, 255, 255, 0.12);
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
-            padding: 22px 28px;
-            border-radius: 34px;
+            padding: 15px 22px;
+            border-radius: 28px;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            margin-bottom: 20px;
+            margin-bottom: 12px;
             align-items: center;
             overflow-x: auto;
             scroll-behavior: smooth;
@@ -270,79 +270,108 @@
             display: none;
         }
 
-        /* بطاقة التطبيق مع الشعار المصور */
         .app-card {
-            width: 170px;
-            height: 104px;
-            border-radius: 24px;
+            width: 152px;
+            height: 88px;
+            border-radius: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             position: relative;
-            transition: transform 0.26s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.26s ease;
-            box-shadow: 0 10px 22px rgba(0,0,0,0.45);
+            transition: transform 0.24s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.24s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.45);
             flex-shrink: 0;
-            padding: 12px;
+            padding: 8px 10px;
             overflow: hidden;
         }
 
+        /* تثبيت اتجاه الشعارات من اليسار لليمين (LTR) لمنع انعكاس وتداخل الشعارات */
         .app-logo-wrapper {
+            direction: ltr !important;
+            unicode-bidi: isolate;
             width: 100%;
-            height: 62px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .app-logo-wrapper svg {
-            max-width: 125px;
-            max-height: 54px;
-            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.35));
+            gap: 6px;
         }
 
         .app-sub-badge {
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             font-weight: 600;
             color: rgba(255, 255, 255, 0.88);
-            margin-top: 4px;
-            letter-spacing: 0.3px;
+            margin-top: 3px;
+            white-space: nowrap;
         }
 
-        /* صف مداخل الـ HDMI */
+        /* تنسيقات الشعارات المدمجة النظيفة (بدون تداخل) */
+        .logo-text-en {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-weight: 900;
+            color: #ffffff;
+            line-height: 1;
+            letter-spacing: -0.5px;
+        }
+
+        .stc-badge {
+            background: #ff375e;
+            color: #fff;
+            padding: 2px 7px;
+            border-radius: 6px;
+            font-size: 1.05rem;
+            font-weight: 800;
+        }
+
+        .shahid-dots {
+            display: inline-flex;
+            gap: 3px;
+            align-items: center;
+            margin-right: 5px;
+        }
+
+        .shahid-dots span {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* صف مداخل الـ HDMI الأربعة */
         .hdmi-row {
             display: flex;
-            gap: 16px;
+            gap: 14px;
         }
 
         .hdmi-card {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.12);
             backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.16);
-            padding: 12px 30px;
-            border-radius: 16px;
-            font-size: 1.1rem;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            padding: 8px 24px;
+            border-radius: 14px;
+            font-size: 0.98rem;
             font-weight: 700;
             color: #fff;
             cursor: pointer;
-            transition: transform 0.25s ease, background 0.25s ease;
+            transition: transform 0.22s ease, background 0.22s ease;
         }
 
         /* ==========================================================================
-           [القسم 5: تأثير التحديد بريموت سوني (Apple TV Focus)]
+           [القسم 5: تأثير التحديد بريموت سوني]
            ========================================================================== */
         .focusable.focused {
-            transform: scale(1.15) translateY(-6px);
-            box-shadow: 0 18px 36px rgba(0, 0, 0, 0.75), 0 0 0 4px #ffffff;
+            transform: scale(1.12) translateY(-4px);
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.75), 0 0 0 3.5px #ffffff;
             z-index: 10;
         }
 
         .pill-btn.focused, .hdmi-card.focused {
             background: #ffffff;
             color: #000000;
-            transform: scale(1.08);
-            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.45);
+            transform: scale(1.06);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.45);
         }
 
         /* ==========================================================================
@@ -358,7 +387,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 55px 75px;
+            padding: 45px 65px;
             background-size: cover;
             background-position: center;
             opacity: 0;
@@ -388,7 +417,7 @@
         }
 
         .ss-big-clock {
-            font-size: 7rem;
+            font-size: 6rem;
             font-weight: 300;
             line-height: 1;
             text-shadow: 0 6px 25px rgba(0,0,0,0.7);
@@ -397,34 +426,33 @@
         .ss-bottom-widgets {
             display: grid;
             grid-template-columns: 1fr 0.8fr 1.8fr;
-            gap: 28px;
+            gap: 24px;
             align-items: end;
             border-top: 1px solid rgba(255,255,255,0.22);
-            padding-top: 22px;
+            padding-top: 18px;
         }
 
         .widget-box h4 {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: rgba(255,255,255,0.7);
             font-weight: 400;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .widget-box .w-main {
-            font-size: 1.6rem;
+            font-size: 1.45rem;
             font-weight: 700;
         }
 
         .widget-box .w-sub {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: rgba(255,255,255,0.8);
-            margin-top: 3px;
+            margin-top: 2px;
         }
     </style>
 </head>
 <body>
 
-    <!-- طبقات الخلفية -->
     <div id="bg-layer"></div>
     <div id="bg-overlay"></div>
 
@@ -444,36 +472,32 @@
             </div>
         </div>
 
-        <!-- القسم الأوسط: عنوان التطبيق المحدد + لوحة المباريات بشعارات الأندية -->
+        <!-- القسم الأوسط -->
         <div class="middle-section">
             <div class="hero-preview">
                 <div class="hero-title" id="active-title">Apple TV</div>
                 <div class="hero-subtitle" id="active-desc">الأفلام والمسلسلات والعروض الحصرية بجودة 4K</div>
             </div>
 
-            <!-- لوحة نتائج المباريات المباشرة (الدوري السعودي + الإنجليزي) -->
+            <!-- لوحة نتائج المباريات المباشرة -->
             <div class="matches-panel">
                 <div class="matches-header">
                     <span>⚽ مباريات الدوري السعودي والإنجليزي</span>
                     <span id="matches-status-text">تحديث تلقائي</span>
                 </div>
                 <div id="ui-matches-list">
-                    <div class="match-row">جاري تحميل المباريات وشعارات الأندية...</div>
+                    <div class="match-row">جاري تحميل المباريات...</div>
                 </div>
             </div>
         </div>
 
-        <!-- القسم السفلي: شريط الشعارات المصورة (11 تطبيقاً) + مداخل HDMI -->
+        <!-- القسم السفلي: التطبيقات + المداخل -->
         <div>
             <div class="section-label">التطبيقات المفضلة</div>
-            <div class="apple-dock" id="apps-container">
-                <!-- يتم توليد الشعارات المصورة للتطبيقات الـ 11 هنا برمجياً -->
-            </div>
+            <div class="apple-dock" id="apps-container"></div>
 
-            <div class="section-label">المداخل</div>
-            <div class="hdmi-row" id="hdmi-container">
-                <!-- يتم توليد أزرار HDMI 1 - 4 هنا برمجياً -->
-            </div>
+            <div class="section-label">المداخل (HDMI)</div>
+            <div class="hdmi-row" id="hdmi-container"></div>
         </div>
     </div>
 
@@ -482,12 +506,12 @@
         <div class="ss-overlay"></div>
         <div class="ss-top">
             <div>
-                <div style="font-size: 1.8rem; font-weight: 700;" id="ss-day">--</div>
-                <div style="font-size: 1.2rem; opacity: 0.85;" id="ss-full-date">--</div>
+                <div style="font-size: 1.6rem; font-weight: 700;" id="ss-day">--</div>
+                <div style="font-size: 1.1rem; opacity: 0.85;" id="ss-full-date">--</div>
             </div>
             <div style="text-align: left;">
-                <div style="font-size: 1.4rem; font-weight: 700;" id="ss-city">مكة المكرمة</div>
-                <div style="font-size: 2.2rem; font-weight: 300;" id="ss-temp">--° صافي</div>
+                <div style="font-size: 1.3rem; font-weight: 700;" id="ss-city">مكة المكرمة</div>
+                <div style="font-size: 2rem; font-weight: 300;" id="ss-temp">--° صافي</div>
             </div>
         </div>
 
@@ -515,7 +539,7 @@
 
     <script>
         /* ==========================================================================
-           [القسم 7: إعدادات المستخدم والشعارات المصورة (SVG Logos) للتطبيقات الـ 11]
+           [القسم 7: إعدادات التطبيقات مع الشعارات المضبوطة وروابط الفتح العميقة]
            ========================================================================== */
         const CONFIG = {
             cityName: "مكة المكرمة",
@@ -530,84 +554,131 @@
                 night: "https://images.unsplash.com/photo-1507400492013-162706c8c05e?auto=format&fit=crop&w=1920&q=80"
             },
 
-            // التطبيقات الـ 11 مع شعاراتها المصورة المدمجة (SVG) لتعمل بأعلى دقة بدون تقطيع
+            // قائمة التطبيقات الـ 11 مع شعارات Flexbox المرتبة وروابط التشغيل المباشرة (Deep Links)
             favoriteApps: [
                 {
                     name: "Apple TV",
                     desc: "تطبيق Apple TV - الأفلام والمسلسلات الحصرية بدقة 4K",
                     color: "linear-gradient(145deg, #1c1c1e 0%, #2c2c2e 100%)",
-                    package: "com.apple.atve.sony.appletv",
-                    svgLogo: `<svg viewBox="0 0 120 50" fill="#ffffff"><path d="M35.5 26.8c0-4.2 3.4-6.3 3.6-6.4-2-2.9-5-3.3-6.1-3.4-2.6-.3-5.1 1.5-6.4 1.5-1.3 0-3.4-1.5-5.5-1.4-2.8 0-5.4 1.6-6.9 4.2-3 5.1-.8 12.7 2.1 16.9 1.4 2 3.1 4.3 5.3 4.2 2.1-.1 3-1.4 5.5-1.4 2.6 0 3.3 1.4 5.6 1.3 2.3 0 3.8-2.1 5.2-4.1 1.6-2.4 2.3-4.7 2.3-4.8-.1-.1-4.7-1.8-4.7-6.6zM31.3 14.3c1.2-1.4 2-3.4 1.8-5.3-1.7.1-3.8 1.1-5 2.6-1.1 1.2-2.1 3.3-1.8 5.2 1.9.1 3.8-1 5-2.5z"/><text x="50" y="36" font-family="sans-serif" font-size="28" font-weight="bold" fill="#fff">tv</text></svg>`
+                    // استخدام رابط البروتوكول المباشر لفتح التطبيق المثبت بدلاً من المتجر
+                    deepLink: "intent://tv.apple.com/#Intent;scheme=https;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;S.browser_fallback_url=https%3A%2F%2Ftv.apple.com;end",
+                    logoHtml: `
+                        <svg width="26" height="26" viewBox="0 0 384 512" fill="#ffffff"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+                        <span class="logo-text-en" style="font-size:1.75rem;">tv</span>
+                    `
                 },
                 {
                     name: "Disney+ الجديد",
                     desc: "تطبيق ديزني بلس الجديد للشرق الأوسط وشمال أفريقيا",
                     color: "linear-gradient(145deg, #061539 0%, #0d3b66 100%)",
-                    package: "com.disney.disneyplus.mea",
-                    svgLogo: `<svg viewBox="0 0 150 55" fill="none"><path d="M25 14 Q 75 -2 125 20" stroke="#00e5ff" stroke-width="2.5" stroke-linecap="round"/><text x="18" y="42" font-family="Georgia, serif" font-size="28" font-weight="bold" fill="#ffffff" letter-spacing="1">Disney</text><text x="116" y="40" font-family="sans-serif" font-size="26" font-weight="bold" fill="#00e5ff">+</text></svg>`
+                    deepLink: "intent://www.apps.disneyplus.com/#Intent;scheme=https;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;S.browser_fallback_url=https%3A%2F%2Fwww.apps.disneyplus.com;end",
+                    logoHtml: `
+                        <div style="display:flex; flex-direction:column; align-items:center;">
+                            <svg width="70" height="12" viewBox="0 0 100 18" fill="none"><path d="M5 15 Q 50 -6 95 15" stroke="#00e5ff" stroke-width="3.5" stroke-linecap="round"/></svg>
+                            <div style="display:flex; align-items:center; margin-top:-4px;">
+                                <span style="font-family:Georgia, serif; font-size:1.45rem; font-weight:bold; color:#fff;">Disney</span>
+                                <span style="font-size:1.4rem; font-weight:900; color:#00e5ff; margin-left:2px;">+</span>
+                            </div>
+                        </div>
+                    `
                 },
                 {
                     name: "MBC شاهد",
                     desc: "المسلسلات العربية والأفلام والرياضة والبث المباشر",
                     color: "linear-gradient(145deg, #0b132b 0%, #1c2541 100%)",
-                    package: "net.mbc.shahid.tv",
-                    svgLogo: `<svg viewBox="0 0 150 55"><circle cx="28" cy="28" r="5" fill="#00e676"/><circle cx="43" cy="28" r="5" fill="#00b0ff"/><circle cx="58" cy="28" r="5" fill="#00e5ff"/><text x="72" y="36" font-family="Tajawal, sans-serif" font-size="27" font-weight="800" fill="#ffffff">شاهد</text></svg>`
+                    deepLink: "intent://shahid.mbc.net/#Intent;scheme=https;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;S.browser_fallback_url=https%3A%2F%2Fshahid.mbc.net;end",
+                    logoHtml: `
+                        <div class="shahid-dots">
+                            <span style="background:#00e676;"></span>
+                            <span style="background:#00b0ff;"></span>
+                            <span style="background:#00e5ff;"></span>
+                        </div>
+                        <span style="font-family:'Tajawal',sans-serif; font-size:1.55rem; font-weight:900; color:#fff;">شاهد</span>
+                    `
                 },
                 {
                     name: "stc tv",
                     desc: "القنوات التلفزيونية المباشرة والأفلام والمسلسلات",
                     color: "linear-gradient(145deg, #4f008c 0%, #2b004d 100%)",
-                    package: "com.intigral.jawwytv.androidtv",
-                    svgLogo: `<svg viewBox="0 0 140 50"><text x="18" y="36" font-family="sans-serif" font-size="30" font-weight="900" fill="#ffffff">stc</text><rect x="78" y="14" width="44" height="26" rx="6" fill="#ff375e"/><text x="86" y="33" font-family="sans-serif" font-size="20" font-weight="bold" fill="#ffffff">tv</text></svg>`
+                    deepLink: "intent://www.stctv.com/#Intent;scheme=https;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;S.browser_fallback_url=https%3A%2F%2Fwww.stctv.com;end",
+                    logoHtml: `
+                        <span class="logo-text-en" style="font-size:1.65rem; margin-right:4px;">stc</span>
+                        <span class="stc-badge">tv</span>
+                    `
                 },
                 {
                     name: "Prime Video",
                     desc: "أفلام ومسلسلات أمازون برايم الأصلية",
                     color: "linear-gradient(145deg, #00a8e1 0%, #005f80 100%)",
-                    package: "com.amazon.amazonvideo.livingroom",
-                    svgLogo: `<svg viewBox="0 0 150 55"><text x="22" y="28" font-family="sans-serif" font-size="22" font-weight="bold" fill="#ffffff">prime video</text><path d="M40 36 Q 75 49 112 35" stroke="#ffffff" stroke-width="3.2" fill="none" stroke-linecap="round"/><path d="M106 33 L114 34 L110 41" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/></svg>`
+                    deepLink: "intent://app.primevideo.com/#Intent;scheme=https;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;S.browser_fallback_url=https%3A%2F%2Fapp.primevideo.com;end",
+                    logoHtml: `
+                        <div style="display:flex; flex-direction:column; align-items:center;">
+                            <span class="logo-text-en" style="font-size:1.2rem; letter-spacing:0px;">prime video</span>
+                            <svg width="65" height="12" viewBox="0 0 80 15" fill="none"><path d="M5 3 Q 40 15 74 3" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/></svg>
+                        </div>
+                    `
                 },
                 {
                     name: "NETFLIX",
                     desc: "الأفلام والمسلسلات العالمية والوثائقيات بدقة 4K",
                     color: "linear-gradient(145deg, #141414 0%, #000000 100%)",
-                    package: "com.netflix.ninja",
-                    svgLogo: `<svg viewBox="0 0 150 50"><text x="15" y="36" font-family="Impact, sans-serif" font-size="33" letter-spacing="3" fill="#e50914">NETFLIX</text></svg>`
+                    deepLink: "intent://www.netflix.com/Browse#Intent;scheme=nflx;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;S.browser_fallback_url=https%3A%2F%2Fwww.netflix.com;end",
+                    logoHtml: `
+                        <span class="logo-text-en" style="font-size:1.65rem; color:#e50914; letter-spacing:2px;">NETFLIX</span>
+                    `
                 },
                 {
                     name: "YouTube",
                     desc: "مشاهدة الفيديوهات والقنوات المفضلة",
                     color: "linear-gradient(145deg, #212121 0%, #121212 100%)",
-                    package: "com.google.android.youtube.tv",
-                    svgLogo: `<svg viewBox="0 0 155 50"><rect x="12" y="11" width="40" height="28" rx="8" fill="#ff0000"/><polygon points="28,18 28,32 40,25" fill="#ffffff"/><text x="58" y="33" font-family="sans-serif" font-size="22" font-weight="bold" fill="#ffffff">YouTube</text></svg>`
+                    deepLink: "intent://www.youtube.com/#Intent;scheme=https;package=com.google.android.youtube.tv;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;S.browser_fallback_url=https%3A%2F%2Fwww.youtube.com;end",
+                    logoHtml: `
+                        <span style="background:#ff0000; width:30px; height:21px; border-radius:6px; display:inline-flex; align-items:center; justify-content:center;">
+                            <span style="border-style:solid; border-width:5px 0 5px 9px; border-color:transparent transparent transparent #fff; margin-left:2px;"></span>
+                        </span>
+                        <span class="logo-text-en" style="font-size:1.3rem;">YouTube</span>
+                    `
                 },
                 {
                     name: "YouTube Music",
                     desc: "الاستماع للمقاطع الصوتية والقوائم المفضلة",
                     color: "linear-gradient(145deg, #1f1f1f 0%, #0d0d0d 100%)",
-                    package: "com.google.android.youtube.tvmusic",
-                    svgLogo: `<svg viewBox="0 0 155 50"><circle cx="30" cy="25" r="16" fill="#ff0000"/><circle cx="30" cy="25" r="9" fill="none" stroke="#ffffff" stroke-width="2"/><polygon points="27,20 27,30 35,25" fill="#ffffff"/><text x="54" y="32" font-family="sans-serif" font-size="20" font-weight="bold" fill="#ffffff">Music</text></svg>`
+                    deepLink: "intent://music.youtube.com/#Intent;scheme=https;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;S.browser_fallback_url=https%3A%2F%2Fmusic.youtube.com;end",
+                    logoHtml: `
+                        <span style="background:#ff0000; width:26px; height:26px; border-radius:50%; border:2px solid #fff; display:inline-flex; align-items:center; justify-content:center;">
+                            <span style="border-style:solid; border-width:4px 0 4px 7px; border-color:transparent transparent transparent #fff; margin-left:2px;"></span>
+                        </span>
+                        <span class="logo-text-en" style="font-size:1.25rem;">Music</span>
+                    `
                 },
                 {
                     name: "beIN CONNECT",
                     desc: "البث المباشر للمباريات والبطولات العالمية",
                     color: "linear-gradient(145deg, #4a154b 0%, #2b0938 100%)",
-                    package: "ptv.bein.mena",
-                    svgLogo: `<svg viewBox="0 0 155 55"><text x="18" y="30" font-family="sans-serif" font-size="26" font-weight="900" fill="#ffffff">beIN</text><text x="82" y="29" font-family="sans-serif" font-size="14" font-weight="bold" fill="#00e5ff">CONNECT</text></svg>`
+                    deepLink: "intent://connect.bein.net/#Intent;scheme=https;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;S.browser_fallback_url=https%3A%2F%2Fconnect.bein.net;end",
+                    logoHtml: `
+                        <span class="logo-text-en" style="font-size:1.45rem;">beIN</span>
+                        <span style="font-size:0.75rem; font-weight:800; color:#00e5ff; letter-spacing:0.5px;">CONNECT</span>
+                    `
                 },
                 {
                     name: "File Manager +",
-                    desc: "تطبيق File Manager Plus لإدارة ملفات التلفزيون وتثبيت الحزم",
+                    desc: "تطبيق File Manager Plus لإدارة ملفات التلفزيون",
                     color: "linear-gradient(145deg, #263238 0%, #11171a 100%)",
-                    package: "com.alphainventor.filemanager",
-                    svgLogo: `<svg viewBox="0 0 120 55"><path d="M25 12 H48 L54 18 H95 C98 18 100 20 100 23 V45 C100 48 98 50 95 50 H25 C22 50 20 48 20 45 V17 C20 14 22 12 25 12 Z" fill="#ff9800"/><text x="48" y="43" font-family="sans-serif" font-size="26" font-weight="900" fill="#ffffff">F</text><text x="68" y="39" font-family="sans-serif" font-size="18" font-weight="bold" fill="#ffffff">+</text></svg>`
+                    deepLink: "intent://#Intent;action=android.intent.action.VIEW;type=resource/folder;package=com.alphainventor.filemanager;end",
+                    logoHtml: `
+                        <span style="background:#ff9800; color:#fff; padding:4px 12px; border-radius:8px; font-weight:900; font-size:1.35rem; font-family:sans-serif; box-shadow:inset 0 -3px 0 rgba(0,0,0,0.2);">F+</span>
+                    `
                 },
                 {
                     name: "Google Play",
                     desc: "متجر جوجل بلاي لتحميل وتحديث تطبيقات الشاشة",
                     color: "linear-gradient(145deg, #1e293b 0%, #0f172a 100%)",
-                    package: "com.android.vending",
-                    svgLogo: `<svg viewBox="0 0 155 50"><polygon points="20,10 20,40 46,25" fill="#00e676"/><polygon points="20,10 38,29 46,25" fill="#ffea00"/><polygon points="20,40 38,21 46,25" fill="#ff1744"/><polygon points="20,10 20,40 33,25" fill="#00b0ff"/><text x="54" y="32" font-family="sans-serif" font-size="21" font-weight="bold" fill="#ffffff">Google Play</text></svg>`
+                    deepLink: "market://details?id=com.google.android.youtube.tv",
+                    logoHtml: `
+                        <svg width="24" height="24" viewBox="0 0 40 40"><polygon points="6,4 6,36 34,20" fill="#00e676"/><polygon points="6,4 25,25 34,20" fill="#ffea00"/><polygon points="6,36 25,15 34,20" fill="#ff1744"/><polygon points="6,4 6,36 20,20" fill="#00b0ff"/></svg>
+                        <span class="logo-text-en" style="font-size:1.25rem;">Play</span>
+                    `
                 }
             ],
 
@@ -620,38 +691,59 @@
         };
 
         /* ==========================================================================
-           [القسم 8: قاموس تعريب أسماء الأندية السعودية والإنجليزية]
+           [القسم 8: قاموس التعريب الشامل (شاملاً الاختصارات مثل Ipswich و Nottm Forest)]
            ========================================================================== */
         const TEAM_TRANSLATIONS = {
+            // أندية الدوري السعودي
             "Al-Hilal": "الهلال", "Al Hilal": "الهلال",
             "Al-Nassr": "النصر", "Al Nassr": "النصر",
             "Al-Ittihad": "الاتحاد", "Al Ittihad": "الاتحاد",
-            "Al-Ahli": "الأهلي", "Al Ahli": "الأهلي",
+            "Al-Ahli": "الأهلي", "Al Ahli": "الأهلي", "Al-Ahli Saudi FC": "الأهلي",
             "Al-Shabab": "الشباب", "Al Shabab": "الشباب",
             "Al-Ettifaq": "الاتفاق", "Al Ettifaq": "الاتفاق",
             "Al-Taawoun": "التعاون", "Al Taawoun": "التعاون",
             "Al-Fateh": "الفتح", "Al Fateh": "الفتح",
-            "Damac": "ضمك", "Al-Fayha": "الفيحاء", "Al-Riyadh": "الرياض",
-            "Al-Qadsiah": "القادسية", "Al-Khaleej": "الخليج", "Al-Raed": "الرائد",
-            "Al-Orobah": "العروبة", "Al-Kholood": "الخلود", "Al-Wehda": "الوحدة",
-            "Liverpool": "ليفربول", "Arsenal": "أرسنال",
+            "Damac": "ضمك", "Al-Fayha": "الفيحاء", "Al Fayha": "الفيحاء",
+            "Al-Riyadh": "الرياض", "Al Riyadh": "الرياض",
+            "Al-Qadsiah": "القادسية", "Al Qadsiah": "القادسية",
+            "Al-Khaleej": "الخليج", "Al Khaleej": "الخليج",
+            "Al-Raed": "الرائد", "Al Raed": "الرائد",
+            "Al-Orobah": "العروبة", "Al Orobah": "العروبة",
+            "Al-Kholood": "الخلود", "Al Kholood": "الخلود",
+            "Al-Wehda": "الوحدة", "Al Wehda": "الوحدة",
+            "Al-Okhdood": "الأخدود", "Al Okhdood": "الأخدود",
+            // أندية الدوري الإنجليزي الممتاز (شاملاً الأسماء المختصرة والكاملة)
+            "Liverpool": "ليفربول",
+            "Arsenal": "أرسنال",
             "Manchester City": "مانشستر سيتي", "Man City": "مانشستر سيتي",
-            "Chelsea": "تشيلسي", "Manchester United": "مان يونايتد", "Man United": "مان يونايتد",
-            "Tottenham Hotspur": "توتنهام", "Tottenham": "توتنهام",
+            "Chelsea": "تشيلسي",
+            "Manchester United": "مان يونايتد", "Man United": "مان يونايتد", "Man Utd": "مان يونايتد",
+            "Tottenham Hotspur": "توتنهام", "Tottenham": "توتنهام", "Spurs": "توتنهام",
             "Newcastle United": "نيوكاسل", "Newcastle": "نيوكاسل",
-            "Aston Villa": "أستون فيلا", "Brighton & Hove Albion": "برايتون", "Brighton": "برايتون",
+            "Aston Villa": "أستون فيلا",
+            "Brighton & Hove Albion": "برايتون", "Brighton": "برايتون",
             "West Ham United": "وست هام", "West Ham": "وست هام",
-            "Everton": "إيفرتون", "Fulham": "فولهام", "Brentford": "برينتفورد",
-            "Crystal Palace": "كريستال بالاس", "Wolverhampton Wanderers": "وولفرهامبتون", "Wolves": "وولفرهامبتون",
-            "Nottingham Forest": "نوتنغهام", "Bournemouth": "بورنموث", "Leicester City": "ليستر سيتي"
+            "Everton": "إيفرتون",
+            "Fulham": "فولهام",
+            "Brentford": "برينتفورد",
+            "Crystal Palace": "كريستال بالاس",
+            "Wolverhampton Wanderers": "وولفرهامبتون", "Wolves": "وولفرهامبتون",
+            "Nottingham Forest": "نوتنغهام فورست", "Nottm Forest": "نوتنغهام فورست",
+            "Bournemouth": "بورنموث", "AFC Bournemouth": "بورنموث",
+            "Leicester City": "ليستر سيتي", "Leicester": "ليستر سيتي",
+            "Ipswich Town": "إيبسويتش تاون", "Ipswich": "إيبسويتش تاون",
+            "Southampton": "ساوثهامبتون",
+            "Leeds United": "ليدز يونايتد", "Leeds": "ليدز يونايتد",
+            "Burnley": "بيرنلي", "Sunderland": "سندرلاند", "Sheffield United": "شيفيلد"
         };
 
         function translateTeam(englishName) {
-            return TEAM_TRANSLATIONS[englishName] || englishName;
+            if (!englishName) return "";
+            return TEAM_TRANSLATIONS[englishName.trim()] || englishName;
         }
 
         /* ==========================================================================
-           [القسم 9: توليد بطاقات الشعارات المصورة وأزرار HDMI في الصفحة]
+           [القسم 9: بناء بطاقات التطبيقات وأزرار HDMI]
            ========================================================================== */
         const appsContainer = document.getElementById('apps-container');
         const hdmiContainer = document.getElementById('hdmi-container');
@@ -665,10 +757,12 @@
             card.dataset.title = app.name;
             card.dataset.desc = app.desc;
             card.innerHTML = `
-                <div class="app-logo-wrapper">${app.svgLogo}</div>
+                <div class="app-logo-wrapper" dir="ltr">${app.logoHtml}</div>
                 <div class="app-sub-badge">${app.name}</div>
             `;
-            card.onclick = () => launchAndroidApp(app.package);
+            card.onclick = () => {
+                window.location.href = app.deepLink;
+            };
             appsContainer.appendChild(card);
         });
 
@@ -685,10 +779,8 @@
         });
 
         /* ==========================================================================
-           [القسم 10: جلب المباريات المباشرة مع شعارات الأندية الرسمية (Team Logos)]
+           [القسم 10: جلب المباريات المباشرة وشعارات الأندية (بدون أخطاء علامات التنصيص)]
            ========================================================================== */
-        const DEFAULT_SHIELD_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffffff"><path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z"/></svg>`;
-
         async function fetchLiveMatches() {
             const uiList = document.getElementById('ui-matches-list');
             const ssList = document.getElementById('ss-matches-list');
@@ -716,8 +808,8 @@
 
                         const homeName = translateTeam(home.team.shortDisplayName || home.team.displayName);
                         const awayName = translateTeam(away.team.shortDisplayName || away.team.displayName);
-                        const homeLogo = home.team.logo || DEFAULT_SHIELD_SVG;
-                        const awayLogo = away.team.logo || DEFAULT_SHIELD_SVG;
+                        const homeLogo = home.team.logo || "";
+                        const awayLogo = away.team.logo || "";
 
                         let centerInfo = "";
                         let timeOrStatusBadge = "";
@@ -731,22 +823,26 @@
                         } else {
                             const matchDate = new Date(ev.date);
                             const matchTime = matchDate.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit', hour12: true });
-                            centerInfo = `<span class="score-box" style="font-size:0.85rem; font-weight:500;">ضد</span>`;
-                            timeOrStatusBadge = `<span style="color:#ffd54f; font-size:0.85rem;">🕒 ${matchTime}</span>`;
+                            centerInfo = `<span class="score-box" style="font-size:0.82rem; font-weight:600;">ضد</span>`;
+                            timeOrStatusBadge = `<span style="color:#ffd54f; font-size:0.85rem; flex-shrink:0;">🕒 ${matchTime}</span>`;
                         }
+
+                        // استخدام onerror آمن تماماً يخفي الصورة المفقودة دون طباعة أي رموز زائدة
+                        const homeImgTag = homeLogo ? `<img class="team-logo" src="${homeLogo}" alt="" onerror="this.style.display='none'">` : '';
+                        const awayImgTag = awayLogo ? `<img class="team-logo" src="${awayLogo}" alt="" onerror="this.style.display='none'">` : '';
 
                         allMatchesHtml.push(`
                             <div class="match-row">
                                 <div class="teams-wrapper">
                                     <span class="league-tag">${lg.label}</span>
                                     <span class="team-item">
-                                        <img class="team-logo" src="${homeLogo}" alt="${homeName}" onerror="this.src='${DEFAULT_SHIELD_SVG}'">
+                                        ${homeImgTag}
                                         <span>${homeName}</span>
                                     </span>
                                     ${centerInfo}
                                     <span class="team-item">
                                         <span>${awayName}</span>
-                                        <img class="team-logo" src="${awayLogo}" alt="${awayName}" onerror="this.src='${DEFAULT_SHIELD_SVG}'">
+                                        ${awayImgTag}
                                     </span>
                                 </div>
                                 <div>${timeOrStatusBadge}</div>
@@ -770,7 +866,7 @@
         }
 
         /* ==========================================================================
-           [القسم 11: نظام التحكم بريموت تلفزيون سوني (الأسهم + زر الإدخال)]
+           [القسم 11: نظام التحكم بريموت تلفزيون سوني]
            ========================================================================== */
         let currentRow = 1;
         let currentCol = 0;
@@ -826,12 +922,8 @@
         });
 
         /* ==========================================================================
-           [القسم 12: دوال فتح التطبيقات ومداخل HDMI على شاشة سوني]
+           [القسم 12: إعدادات الشاشة ومداخل الـ HDMI]
            ========================================================================== */
-        function launchAndroidApp(packageName) {
-            window.location.href = `intent://#Intent;package=${packageName};end`;
-        }
-
         function openAndroidSettings() {
             window.location.href = "intent://#Intent;action=android.settings.SETTINGS;end";
         }
@@ -940,7 +1032,6 @@
             idleTimer = setTimeout(() => toggleScreensaver(true), CONFIG.inactivityTimeoutSeconds * 1000);
         }
 
-        // بدء التشغيل التلقائي
         updateTimeOfDayBackground();
         updateClockAndDate();
         updateFocus();
