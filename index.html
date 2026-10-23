@@ -35,7 +35,7 @@
         }
 
         /* ==========================================================================
-           [2] نظام الخلفيات المزدوج: تيتانيوم سوني + خلفية أفلام كل تطبيق
+           [2] نظام الخلفيات المزدوج: (تيتانيوم سوني / أسود ملكي) + خلفية أفلام كل تطبيق
            ========================================================================== */
         #bg-base-theme {
             position: absolute;
@@ -45,6 +45,7 @@
             z-index: 1;
         }
 
+        /* طبقتان لعرض مشاهد الأفلام الخاصة بكل تطبيق بتبديل ناعم (Crossfade) وحركة سينمائية */
         .app-backdrop-layer {
             position: absolute;
             inset: 0;
@@ -54,6 +55,7 @@
             transform: scale(1.0);
             transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1), transform 8s ease-out;
             z-index: 2;
+            /* قناع شفاف يدمج صورة الفيلم مع الثيم الداكن في الأسفل */
             -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0) 95%);
             mask-image: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0) 95%);
         }
@@ -63,6 +65,7 @@
             transform: scale(1.07);
         }
 
+        /* درع حماية داكن (Vignette Shield) يضمن عدم تأثر النصوص أو جدول المباريات بالخلفية أبداً */
         #bg-protective-vignette {
             position: absolute;
             inset: 0;
@@ -75,7 +78,7 @@
         }
 
         /* ==========================================================================
-           [3] تمديد الواجهة على كامل عرض الشاشة (Edge-to-Edge)
+           [3] تمديد الواجهة على كامل عرض الشاشة (إزالة الفراغات الجانبية المقصوصة)
            ========================================================================== */
         #main-ui {
             position: relative;
@@ -85,6 +88,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            /* تقليل الهوامش الجانبية لتمتد الواجهة على كامل شاشة سوني */
             padding: 20px 24px 16px 24px;
         }
 
@@ -314,12 +318,13 @@
         }
 
         /* ==========================================================================
-           [6] شريط التطبيقات الممتد (Full-Bleed Edge-to-Edge)
+           [6] شريط التطبيقات بعرض الشاشة الكامل (Full-Bleed Edge-to-Edge) بدون قص
            ========================================================================== */
         .apps-row {
             display: flex;
             gap: 16px;
             background: transparent;
+            /* تمديد الشريط ليصل إلى حافتي التلفزيون اليمنى واليسرى بالكامل */
             margin-right: -24px;
             margin-left: -24px;
             padding: 14px 24px 14px 24px;
@@ -379,7 +384,7 @@
         }
 
         /* ==========================================================================
-           [7] الشريط السفلي: المداخل (HDMI) + زر التعديل السريع
+           [7] الشريط السفلي: المداخل (HDMI) + زر كل التطبيقات السريع
            ========================================================================== */
         .bottom-bar {
             display: flex;
@@ -428,7 +433,7 @@
             transform: translateY(2px);
         }
 
-        .glass-btn.focused, .hdmi-pill.focused, .drawer-app-card.focused, .edit-input.focused {
+        .glass-btn.focused, .hdmi-pill.focused, .drawer-app-card.focused {
             background: #ffffff !important;
             color: #030407 !important;
             border-color: #ffffff !important;
@@ -437,71 +442,7 @@
         }
 
         /* ==========================================================================
-           [9] نافذة "تعديل التطبيقات" التفاعلية (App Customization Modal)
-           ========================================================================== */
-        #custom-apps-modal {
-            position: absolute;
-            inset: 0;
-            z-index: 35;
-            background: rgba(4, 6, 11, 0.95);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            display: flex;
-            flex-direction: column;
-            padding: 26px 36px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-
-        #custom-apps-modal.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .custom-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 14px;
-            overflow-y: auto;
-            padding: 10px;
-            max-height: calc(100vh - 130px);
-        }
-
-        .custom-grid::-webkit-scrollbar {
-            display: none;
-        }
-
-        .custom-slot-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 14px;
-            padding: 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .custom-slot-card label {
-            font-size: 0.82rem;
-            color: #38bdf8;
-            font-weight: 700;
-        }
-
-        .edit-input {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-family: 'Almarai', sans-serif;
-            font-size: 0.9rem;
-            width: 100%;
-            outline: none;
-        }
-
-        /* ==========================================================================
-           [10] نافذة "كل تطبيقات الجهاز" السريعة (All Apps Drawer)
+           [9] نافذة "كل تطبيقات الجهاز" السريعة (All Apps Grid Modal)
            ========================================================================== */
         #all-apps-modal {
             position: absolute;
@@ -585,7 +526,7 @@
         }
 
         /* ==========================================================================
-           [11] شاشة التوقف الذكية
+           [10] شاشة التوقف الذكية
            ========================================================================== */
         #screensaver {
             position: absolute;
@@ -642,6 +583,7 @@
 </head>
 <body>
 
+    <!-- الطبقات الخلفية: الثيم الأساسي + طبقتا مشاهد الأفلام التفاعلية + درع التباين الداكن -->
     <div id="bg-base-theme"></div>
     <div id="backdrop-1" class="app-backdrop-layer"></div>
     <div id="backdrop-2" class="app-backdrop-layer"></div>
@@ -656,17 +598,17 @@
                 <div class="prayer-pill" id="ui-prayer-mini">🕌 الصلاة القادمة: ...</div>
             </div>
             <div class="top-actions">
-                <button class="glass-btn highlight-btn focusable" data-row="0" data-col="0" data-title="تعديل التطبيقات" data-desc="تغيير وتخصيص أسماء وحزم التطبيقات المفضلة على الواجهة مباشرة" onclick="openCustomAppsModal()">
-                    <span>✏️</span><span>تعديل التطبيقات</span>
-                </button>
-                <button class="glass-btn highlight-btn focusable" data-row="0" data-col="1" data-title="كل تطبيقات التلفزيون" data-desc="فتح شبكة سريعة تحتوي على جميع التطبيقات والأدوات المثبتة" onclick="openAllAppsModal()">
+                <button class="glass-btn highlight-btn focusable" data-row="0" data-col="0" data-title="كل تطبيقات التلفزيون" data-desc="فتح شبكة سريعة تحتوي على جميع التطبيقات والأدوات المثبتة في شاشة سوني" onclick="openAllAppsModal()">
                     <span>⊞</span><span>كل التطبيقات</span>
                 </button>
-                <button class="glass-btn focusable" data-row="0" data-col="2" data-title="تغيير الثيم الداكن" data-desc="التبديل بين تيتانيوم سوني، الأسود الملكي، وبقية الثيمات" onclick="cycleTheme()">
+                <button class="glass-btn focusable" data-row="0" data-col="1" data-title="تغيير الثيم الداكن" data-desc="التبديل بين خلفية تيتانيوم سوني، الأسود الملكي، وبقية الثيمات الداكنة" onclick="cycleTheme()">
                     <span>🎨</span><span id="theme-btn-label">الخلفية: تيتانيوم سوني</span>
                 </button>
-                <button class="glass-btn focusable" data-row="0" data-col="3" data-title="شاشة التوقف الذكية" data-desc="عرض الساعة السينمائية ومواقيت الصلاة" onclick="toggleScreensaver(true)">
+                <button class="glass-btn focusable" data-row="0" data-col="2" data-title="شاشة التوقف الذكية" data-desc="عرض الساعة السينمائية، مواقيت الصلاة، الطقس، والمباريات" onclick="toggleScreensaver(true)">
                     <span>🌙</span><span>شاشة التوقف</span>
+                </button>
+                <button class="glass-btn focusable" data-row="0" data-col="3" data-title="تحديث النتائج" data-desc="تحديث فوري لنتائج مباريات الدوري السعودي والإنجليزي" onclick="fetchLiveMatches()">
+                    <span>⚽</span><span>تحديث</span>
                 </button>
                 <button class="glass-btn focusable" data-row="0" data-col="4" data-title="إعدادات تلفزيون سوني" data-desc="فتح إعدادات نظام أندرويد تي في مباشرة" onclick="openAndroidSettings()">
                     <span>⚙️</span><span>الإعدادات</span>
@@ -693,7 +635,7 @@
             </div>
         </div>
 
-        <!-- القسم السفلي -->
+        <!-- القسم السفلي: شريط التطبيقات الممتد + المداخل -->
         <div>
             <div class="apps-row" id="apps-container"></div>
 
@@ -702,31 +644,19 @@
                     <span class="hdmi-title">المداخل:</span>
                 </div>
                 <div class="hdmi-row">
-                    <div class="hdmi-pill focusable" data-row="2" data-col="4" data-title="تعديل التطبيقات المفضلة" data-desc="تخصيص التطبيقات مباشرة من الشاشة" onclick="openCustomAppsModal()">✏️ تخصيص التطبيقات</div>
+                    <div class="hdmi-pill focusable" data-row="2" data-col="4" data-title="كل تطبيقات الجهاز" data-desc="استعراض وفتح كافة التطبيقات المثبتة على تلفزيون سوني" onclick="openAllAppsModal()">⊞ جميع تطبيقات الجهاز</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- نافذة تعديل التطبيقات المباشرة -->
-    <div id="custom-apps-modal">
-        <div class="modal-header">
-            <div class="modal-title">✏️ تخصيص التطبيقات المفضلة</div>
-            <div style="display:flex; gap:10px;">
-                <button class="glass-btn highlight-btn" onclick="saveCustomApps()">💾 حفظ التعديلات</button>
-                <button class="glass-btn" onclick="closeCustomAppsModal()">✕ إغلاق</button>
-            </div>
-        </div>
-        <div class="custom-grid" id="custom-apps-grid"></div>
-    </div>
-
-    <!-- نافذة كل التطبيقات -->
+    <!-- نافذة "كل تطبيقات الجهاز" المنبثقة السريعة -->
     <div id="all-apps-modal">
         <div class="modal-header">
             <div class="modal-title">⊞ جميع تطبيقات تلفزيون سوني</div>
             <div style="display:flex; gap:10px;">
-                <button class="glass-btn" onclick="openNativeAppsSettings()">⚙️ إدارة تطبيقات النظام</button>
-                <button class="glass-btn" onclick="closeAllAppsModal()">✕ إغلاق</button>
+                <button class="glass-btn drawer-item" data-didx="0" onclick="openNativeAppsSettings()">⚙️ إدارة تطبيقات النظام</button>
+                <button class="glass-btn drawer-item" data-didx="1" onclick="closeAllAppsModal()">✕ إغلاق (رجوع)</button>
             </div>
         </div>
         <div class="drawer-grid" id="drawer-apps-grid"></div>
@@ -769,7 +699,7 @@
 
     <script>
         /* ==========================================================================
-           [12] إدارة الثيمات والتطبيقات المحفوظة محلياً
+           [11] قائمة الثيمات الداكنة المفضلة (تيتانيوم سوني + أسود ملكي + غيرها)
            ========================================================================== */
         const THEMES_LIST = [
             { name: "تيتانيوم سوني", grad: "radial-gradient(circle at 75% 20%, #1e242b 0%, #0b0e12 65%, #040507 100%)" },
@@ -795,37 +725,173 @@
 
         applyTheme();
 
-        const DEFAULT_APPS = [
-            { name: "Apple TV", badge: "APPLE TV+ ORIGINALS • 4K", desc: "أفلام ومسلسلات Apple الأصلية بدقة 4K HDR", bg: "linear-gradient(145deg, #1c1c1e 0%, #0a0a0c 100%)", packages: "com.apple.atve.sony.appletv,appletv", backdrops: ["https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=1920&q=85"] },
-            { name: "Disney+", badge: "DISNEY • MARVEL • STAR WARS", desc: "عالم ديزني، وأبطال مارفل، وروائع بيكسار", bg: "linear-gradient(145deg, #0b2e59 0%, #040d1a 100%)", packages: "com.disney.disneyplus.mea,disney", backdrops: ["https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=1920&q=85"] },
-            { name: "MBC شاهد", badge: "SHAHID VIP • مسلسلات وأفلام", desc: "أقوى المسلسلات العربية الحصرية والرياضة المباشرة", bg: "linear-gradient(145deg, #111d2c 0%, #060a10 100%)", packages: "net.mbc.shahid.tv,shahid", backdrops: ["https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1920&q=85"] },
-            { name: "stc tv", badge: "STC TV • بث مباشر وأفلام", desc: "القنوات التلفزيونية المباشرة وأحدث الأفلام والمسلسلات", bg: "linear-gradient(145deg, #3c006b 0%, #150026 100%)", packages: "com.intigral.jawwytv.androidtv,stctv", backdrops: ["https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=1920&q=85"] },
-            { name: "Prime Video", badge: "AMAZON ORIGINALS • 4K UHD", desc: "أفلام ومسلسلات أمازون برايم الحصرية", bg: "linear-gradient(145deg, #00668c 0%, #04131c 100%)", packages: "com.amazon.amazonvideo.livingroom,primevideo", backdrops: ["https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1920&q=85"] },
-            { name: "NETFLIX", badge: "NETFLIX 4K ULTRA HD", desc: "الأفلام والمسلسلات العالمية والوثائقية بدقة 4K", bg: "linear-gradient(145deg, #1f0406 0%, #060606 100%)", packages: "com.netflix.ninja,netflix", backdrops: ["https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?auto=format&fit=crop&w=1920&q=85"] },
-            { name: "YouTube", badge: "YOUTUBE 4K 60FPS", desc: "مشاهدة الفيديوهات والقنوات والبث المباشر", bg: "linear-gradient(145deg, #242424 0%, #0b0b0b 100%)", packages: "com.google.android.youtube.tv,youtube", backdrops: ["https://images.unsplash.com/photo-1611162616475-46b635cb6868?auto=format&fit=crop&w=1920&q=85"] },
-            { name: "YouTube Music", badge: "YOUTUBE MUSIC", desc: "الاستماع للمقاطع الصوتية والألبومات وقوائم التشغيل", bg: "linear-gradient(145deg, #290e12 0%, #09090b 100%)", packages: "com.google.android.youtube.tvmusic,music", backdrops: ["https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1920&q=85"] },
-            { name: "beIN CONNECT", badge: "BEIN SPORTS", desc: "البث المباشر للبطولات والدوريات الكبرى", bg: "linear-gradient(145deg, #3b0d54 0%, #12031c 100%)", packages: "ptv.bein.mena,bein", backdrops: ["https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=1920&q=85"] },
-            { name: "File Manager +", badge: "SYSTEM UTILITY", desc: "إدارة ملفات الشاشة والتخزين الخارجي", bg: "linear-gradient(145deg, #1e293b 0%, #090d14 100%)", packages: "com.alphainventor.filemanager,filemanager", backdrops: ["https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1920&q=85"] },
-            { name: "Google Play", badge: "ANDROID TV STORE", desc: "متجر تطبيقات وألعاب نظام Android TV الرسمي", bg: "linear-gradient(145deg, #152238 0%, #070b12 100%)", packages: "com.android.vending,play", backdrops: ["https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1920&q=85"] }
-        ];
-
-        let savedApps = localStorage.getItem('sony_favorite_apps');
-        let currentApps = savedApps ? JSON.parse(savedApps) : DEFAULT_APPS;
-
+        /* ==========================================================================
+           [12] إعداد التطبيقات مع مشاهد الأفلام والخلفيات السينمائية لكل تطبيق
+           ========================================================================== */
         const CONFIG = {
             cityName: "مكة المكرمة",
             latitude: 21.4225,
             longitude: 39.8262,
             inactivityTimeoutSeconds: 600,
-            favoriteApps: currentApps,
-            extraDeviceApps: [
-                { name: "Downloader", packages: "com.esaba.downloader" },
-                { name: "BrowseHere", packages: "com.tcl.browser" },
-                { name: "Aptoide TV", packages: "cm.aptoidetv.pt" },
-                { name: "Kodi", packages: "org.xbmc.kodi" },
-                { name: "VLC Player", packages: "org.videolan.vlc" },
-                { name: "Spotify", packages: "com.spotify.tv.android" }
+
+            favoriteApps: [
+                {
+                    name: "Apple TV",
+                    badge: "APPLE TV+ ORIGINALS • 4K DOLBY VISION",
+                    desc: "أفلام ومسلسلات Apple الأصلية (Severance, Silo, Foundation) بدقة 4K HDR",
+                    bg: "linear-gradient(145deg, #1c1c1e 0%, #0a0a0c 100%)",
+                    packages: "com.apple.atve.sony.appletv,com.apple.atve.androidtv.appletv,appletv",
+                    // مشاهد سينمائية خاصة بأفلام الخيال العلمي والدراما لمنصة Apple TV
+                    backdrops: [
+                        "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=1920&q=85",
+                        "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1920&q=85",
+                        "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=1920&q=85"
+                    ],
+                    fallbackLogo: `<svg viewBox="0 0 170 70" width="105" height="45"><path fill="#fff" d="M52.4 36.6c-.1-5.6 2.5-9.8 7.6-12.9-2.9-4.1-7.2-6.3-12.9-6.8-5.4-.4-11.3 3.2-13.5 3.2-2.3 0-7.5-3-11.6-3-8.6.1-17.6 6.7-17.6 20.2 0 6 2.2 12.4 4.1 16.5 2 4.3 6.5 13.7 13.8 13.5 3.8-.1 6.5-2.7 11.5-2.7 4.8 0 7.3 2.7 11.6 2.7 7.4-.1 12.1-8.8 13.9-13.1-8.5-4-9.9-12.1-9.9-17.6zM43.8 11.6c4.2-4.9 3.8-9.4 3.7-11-3.7.2-7.9 2.5-10.3 5.3-2.7 3-4.2 6.7-3.9 10.9 4 .3 7.6-1.7 10.5-5.2z"/><text x="72" y="49" font-family="sans-serif" font-size="39" font-weight="700" fill="#fff">tv</text></svg>`
+                },
+                {
+                    name: "Disney+",
+                    badge: "DISNEY • MARVEL • STAR WARS • PIXAR",
+                    desc: "عالم ديزني، أبطال مارفل، حرب النجوم، وروائع بيكسار وناشيونال جيوغرافيك",
+                    bg: "linear-gradient(145deg, #0b2e59 0%, #040d1a 100%)",
+                    packages: "com.disney.disneyplus.mea,com.disney.disneyplus,disney",
+                    // مشاهد مجرات ستار وورز وعوالم ديزني الساحرة
+                    backdrops: [
+                        "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=1920&q=85",
+                        "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1920&q=85",
+                        "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1920&q=85"
+                    ],
+                    fallbackLogo: `<svg viewBox="0 0 200 85" width="125" height="52"><path d="M35 28 Q 95 -4 162 30" fill="none" stroke="#00e5ff" stroke-width="3.5" stroke-linecap="round"/><text x="24" y="60" font-family="Georgia, serif" font-size="38" font-weight="bold" fill="#ffffff">Disney</text><text x="155" y="56" font-family="sans-serif" font-size="34" font-weight="800" fill="#00e5ff">+</text></svg>`
+                },
+                {
+                    name: "MBC شاهد",
+                    badge: "SHAHID VIP • مسلسلات وأفلام ومباريات",
+                    desc: "أقوى المسلسلات العربية الحصرية، أعمال شاهد الأصلية، والرياضة المباشرة",
+                    bg: "linear-gradient(145deg, #111d2c 0%, #060a10 100%)",
+                    packages: "net.mbc.shahid.tv,net.mbc.shahid,shahid",
+                    // مشاهد سينمائية ودرامية وملاعب كرة قدم لمنصة شاهد
+                    backdrops: [
+                        "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1920&q=85",
+                        "https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=1920&q=85",
+                        "https://images.unsplash.com/photo-1514306191717-452ec28c7814?auto=format&fit=crop&w=1920&q=85"
+                    ],
+                    fallbackLogo: `<svg viewBox="0 0 210 75" width="130" height="48"><circle cx="30" cy="38" r="7.5" fill="#00e676"/><circle cx="52" cy="38" r="7.5" fill="#00b0ff"/><circle cx="74" cy="38" r="7.5" fill="#00e5ff"/><text x="94" y="49" font-family="sans-serif" font-size="36" font-weight="800" fill="#ffffff">شاهد</text></svg>`
+                },
+                {
+                    name: "stc tv",
+                    badge: "STC TV • بث مباشر وأفلام ومسلسلات",
+                    desc: "القنوات التلفزيونية المباشرة وأحدث الأفلام والمسلسلات العائلية",
+                    bg: "linear-gradient(145deg, #3c006b 0%, #150026 100%)",
+                    packages: "com.intigral.jawwytv.androidtv,com.stctv.app,jawwytv,stctv",
+                    backdrops: [
+                        "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=1920&q=85",
+                        "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=1920&q=85"
+                    ],
+                    fallbackLogo: `<svg viewBox="0 0 190 70" width="120" height="46"><text x="18" y="48" font-family="sans-serif" font-size="42" font-weight="900" fill="#ffffff">stc</text><rect x="100" y="16" width="66" height="38" rx="9" fill="#ff2a5f"/><text x="115" y="43" font-family="sans-serif" font-size="27" font-weight="800" fill="#ffffff">tv</text></svg>`
+                },
+                {
+                    name: "Prime Video",
+                    badge: "AMAZON ORIGINALS • 4K UHD",
+                    desc: "أفلام ومسلسلات أمازون برايم الحصرية (The Rings of Power, The Boys, Reacher)",
+                    bg: "linear-gradient(145deg, #00668c 0%, #04131c 100%)",
+                    packages: "com.amazon.amazonvideo.livingroom,com.amazon.avod,primevideo",
+                    backdrops: [
+                        "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1920&q=85",
+                        "https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=1920&q=85"
+                    ],
+                    fallbackLogo: `<svg viewBox="0 0 220 80" width="130" height="50"><text x="20" y="40" font-family="sans-serif" font-size="31" font-weight="800" fill="#ffffff">prime video</text><path d="M48 52 Q 108 72 168 50" fill="none" stroke="#00b9ff" stroke-width="4.5" stroke-linecap="round"/></svg>`
+                },
+                {
+                    name: "NETFLIX",
+                    badge: "NETFLIX 4K ULTRA HD",
+                    desc: "الأفلام والمسلسلات العالمية والوثائقيات الحصرية بدقة 4K",
+                    bg: "linear-gradient(145deg, #1f0406 0%, #060606 100%)",
+                    packages: "com.netflix.ninja,com.netflix.mediaclient,netflix",
+                    backdrops: [
+                        "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?auto=format&fit=crop&w=1920&q=85",
+                        "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1920&q=85"
+                    ],
+                    fallbackLogo: `<svg viewBox="0 0 220 70" width="130" height="44"><text x="16" y="50" font-family="Impact, sans-serif" font-size="46" fill="#e50914" letter-spacing="4">NETFLIX</text></svg>`
+                },
+                {
+                    name: "YouTube",
+                    badge: "YOUTUBE 4K 60FPS",
+                    desc: "مشاهدة الفيديوهات والقنوات المفضلة والبث المباشر",
+                    bg: "linear-gradient(145deg, #242424 0%, #0b0b0b 100%)",
+                    packages: "com.google.android.youtube.tv,com.google.android.youtube",
+                    backdrops: [
+                        "https://images.unsplash.com/photo-1611162616475-46b635cb6868?auto=format&fit=crop&w=1920&q=85",
+                        "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1920&q=85"
+                    ],
+                    fallbackLogo: `<svg viewBox="0 0 230 70" width="135" height="44"><rect x="12" y="13" width="60" height="42" rx="12" fill="#ff0000"/><polygon points="36,24 36,44 54,34" fill="#ffffff"/><text x="82" y="46" font-family="sans-serif" font-size="33" font-weight="800" fill="#ffffff">YouTube</text></svg>`
+                },
+                {
+                    name: "YouTube Music",
+                    badge: "YOUTUBE MUSIC • AUDIO",
+                    desc: "الاستماع للمقاطع الصوتية والألبومات وقوائم التشغيل",
+                    bg: "linear-gradient(145deg, #290e12 0%, #09090b 100%)",
+                    packages: "com.google.android.youtube.tvmusic,com.google.android.apps.youtube.music",
+                    backdrops: [
+                        "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1920&q=85",
+                        "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1920&q=85"
+                    ],
+                    fallbackLogo: `<svg viewBox="0 0 220 70" width="130" height="44"><circle cx="40" cy="35" r="23" fill="#ff0000"/><circle cx="40" cy="35" r="13" fill="none" stroke="#ffffff" stroke-width="2.5"/><polygon points="36,28 36,42 48,35" fill="#ffffff"/><text x="74" y="45" font-family="sans-serif" font-size="31" font-weight="800" fill="#ffffff">Music</text></svg>`
+                },
+                {
+                    name: "beIN CONNECT",
+                    badge: "BEIN SPORTS • LIVE FOOTBALL",
+                    desc: "البث المباشر لدوري أبطال أوروبا والدوري الإنجليزي والبطولات العالمية",
+                    bg: "linear-gradient(145deg, #3b0d54 0%, #12031c 100%)",
+                    packages: "ptv.bein.mena,com.bein.connect,bein",
+                    backdrops: [
+                        "https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=1920&q=85",
+                        "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1920&q=85"
+                    ],
+                    fallbackLogo: `<svg viewBox="0 0 220 75" width="135" height="46"><text x="14" y="46" font-family="sans-serif" font-size="38" font-weight="900" fill="#ffffff">beIN</text><rect x="106" y="23" width="100" height="28" rx="6" fill="#00e5ff"/><text x="114" y="42" font-family="sans-serif" font-size="18" font-weight="900" fill="#150421">CONNECT</text></svg>`
+                },
+                {
+                    name: "File Manager +",
+                    badge: "SYSTEM UTILITY • إدارة الملفات",
+                    desc: "إدارة ملفات الشاشة والتخزين الخارجي والشبكة المحلية وتثبيت الحزم",
+                    bg: "linear-gradient(145deg, #1e293b 0%, #090d14 100%)",
+                    packages: "com.alphainventor.filemanager,filemanager",
+                    backdrops: [
+                        "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1920&q=85"
+                    ],
+                    fallbackLogo: `<svg viewBox="0 0 180 75" width="110" height="46"><path d="M35 14 H68 L76 22 H140 C145 22 148 25 148 30 V58 C148 63 145 66 140 66 H35 C30 66 27 63 27 58 V22 C27 17 30 14 35 14 Z" fill="#ff9800"/><text x="68" y="55" font-family="sans-serif" font-size="36" font-weight="900" fill="#ffffff">F+</text></svg>`
+                },
+                {
+                    name: "Google Play",
+                    badge: "ANDROID TV STORE",
+                    desc: "متجر تطبيقات وألعاب نظام Android TV الرسمي",
+                    bg: "linear-gradient(145deg, #152238 0%, #070b12 100%)",
+                    packages: "com.android.vending",
+                    backdrops: [
+                        "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1920&q=85"
+                    ],
+                    fallbackLogo: `<svg viewBox="0 0 220 70" width="130" height="44"><polygon points="24,12 24,58 62,35" fill="#00e676"/><polygon points="24,12 49,39 62,35" fill="#ffea00"/><polygon points="24,58 49,31 62,35" fill="#ff1744"/><polygon points="24,12 24,58 42,35" fill="#00b0ff"/><text x="76" y="45" font-family="sans-serif" font-size="30" font-weight="800" fill="#ffffff">Google Play</text></svg>`
+                }
             ],
+
+            // قائمة شاملة للتطبيقات الإضافية في تلفزيون سوني لعرضها داخل نافذة "كل التطبيقات"
+            extraDeviceApps: [
+                { name: "Downloader", packages: "com.esaba.downloader,downloader" },
+                { name: "BrowseHere", packages: "com.tcl.browser,browsehere" },
+                { name: "Aptoide TV", packages: "cm.aptoidetv.pt,aptoide" },
+                { name: "Kodi", packages: "org.xbmc.kodi,kodi" },
+                { name: "VLC Player", packages: "org.videolan.vlc,vlc" },
+                { name: "Plex", packages: "com.plexapp.android,plex" },
+                { name: "Spotify", packages: "com.spotify.tv.android,com.spotify.music,spotify" },
+                { name: "TOD", packages: "com.todtv.tod,tod" },
+                { name: "OSN+", packages: "com.osn.go,osn" },
+                { name: "STARZPLAY", packages: "com.parsifal.starz,starzplay" },
+                { name: "Watch iT", packages: "com.watchit.android,watchit" },
+                { name: "Send Files to TV", packages: "com.yablio.sendfilestotv,sendfilestotv" },
+                { name: "Sony TV Living Decor", packages: "com.sony.dtv.livingfit,livingfit" },
+                { name: "Sony Bravia Media Player", packages: "com.sony.dtv.osat.video,com.sony.dtv.osat.music" },
+                { name: "متصفح التلفزيون", packages: "com.vewd.core.integration.dia,com.opera.sdk.example,browser" }
+            ],
+
             hdmiInputs: [
                 { name: "HDMI 1", desc: "التحويل المباشر إلى المنفذ HDMI 1" },
                 { name: "HDMI 2", desc: "التحويل المباشر إلى المنفذ HDMI 2" },
@@ -835,80 +901,95 @@
         };
 
         /* ==========================================================================
-           [13] محرك خلفيات الأفلام التفاعلية
+           [13] محرك تبديل خلفية الأفلام لكل تطبيق بنعومة (Dynamic Movie Backdrop)
            ========================================================================== */
         let activeBackdropSlot = 1;
         let currentBackdropUrl = "";
+        let sceneRotationTimer = null;
 
         function setDynamicAppBackdrop(backdropList) {
-            if (!backdropList || backdropList.length === 0) return;
-            const url = backdropList[0];
-            if (url === currentBackdropUrl) return;
-            currentBackdropUrl = url;
+            clearInterval(sceneRotationTimer);
+            if (!backdropList || backdropList.length === 0) {
+                document.getElementById('backdrop-1').classList.remove('active');
+                document.getElementById('backdrop-2').classList.remove('active');
+                currentBackdropUrl = "";
+                return;
+            }
 
-            const nextSlot = activeBackdropSlot === 1 ? 2 : 1;
-            const currentEl = document.getElementById(`backdrop-${activeBackdropSlot}`);
-            const nextEl = document.getElementById(`backdrop-${nextSlot}`);
+            let sceneIndex = 0;
+            const showScene = (url) => {
+                if (url === currentBackdropUrl) return;
+                currentBackdropUrl = url;
 
-            nextEl.style.backgroundImage = `url('${url}')`;
-            nextEl.classList.add('active');
-            currentEl.classList.remove('active');
-            activeBackdropSlot = nextSlot;
+                const nextSlot = activeBackdropSlot === 1 ? 2 : 1;
+                const currentEl = document.getElementById(`backdrop-${activeBackdropSlot}`);
+                const nextEl = document.getElementById(`backdrop-${nextSlot}`);
+
+                nextEl.style.backgroundImage = `url('${url}')`;
+                nextEl.classList.add('active');
+                currentEl.classList.remove('active');
+                activeBackdropSlot = nextSlot;
+            };
+
+            showScene(backdropList[0]);
+
+            // إذا كان للتطبيق أكثر من مشهد سينمائي، يتم التبديل بينها بهدوء كل 7 ثوانٍ أثناء الوقوف عليه
+            if (backdropList.length > 1) {
+                sceneRotationTimer = setInterval(() => {
+                    sceneIndex = (sceneIndex + 1) % backdropList.length;
+                    showScene(backdropList[sceneIndex]);
+                }, 7000);
+            }
         }
 
         /* ==========================================================================
-           [14] بناء شريط التطبيقات وسحب أيقونات النظام
+           [14] بناء شريط التطبيقات وسحب الأيقونات الأصلية من نظام التلفزيون
            ========================================================================== */
         const appsContainer = document.getElementById('apps-container');
         const hdmiContainer = document.getElementById('hdmi-container');
 
-        function renderAppsDock() {
-            appsContainer.innerHTML = '';
-            CONFIG.favoriteApps.forEach((app, index) => {
-                const wrap = document.createElement('div');
-                wrap.className = 'app-item-wrap';
+        CONFIG.favoriteApps.forEach((app, index) => {
+            const wrap = document.createElement('div');
+            wrap.className = 'app-item-wrap';
 
-                const card = document.createElement('div');
-                card.className = 'app-card focusable';
-                card.style.background = app.bg || "linear-gradient(145deg, #1c1c1e 0%, #0a0a0c 100%)";
-                card.dataset.row = "1";
-                card.dataset.col = index.toString();
-                card.dataset.title = app.name;
-                card.dataset.badge = app.badge || "SONY BRAVIA XR 4K";
-                card.dataset.desc = app.desc;
-                card.dataset.appIndex = index.toString();
-                card.innerHTML = `<div style="font-size:1.1rem; font-weight:700;">${app.name}</div>`;
+            const card = document.createElement('div');
+            card.className = 'app-card focusable';
+            card.style.background = app.bg;
+            card.dataset.row = "1";
+            card.dataset.col = index.toString();
+            card.dataset.title = app.name;
+            card.dataset.badge = app.badge || "SONY BRAVIA XR 4K";
+            card.dataset.desc = app.desc;
+            card.dataset.appIndex = index.toString();
+            card.innerHTML = app.fallbackLogo;
 
-                if (window.AndroidTV && typeof window.AndroidTV.getAppIcon === 'function') {
-                    setTimeout(() => {
-                        try {
-                            const rawIcon = window.AndroidTV.getAppIcon(app.packages);
-                            if (rawIcon && rawIcon.includes("data:image")) {
-                                const [type, src] = rawIcon.split("|");
-                                app.resolvedIcon = src;
-                                if (type === "BANNER") {
-                                    card.innerHTML = `<img class="native-banner-img" src="${src}" alt="${app.name}">`;
-                                } else {
-                                    card.innerHTML = `<img class="native-icon-img" src="${src}" alt="${app.name}">`;
-                                }
+            if (window.AndroidTV && typeof window.AndroidTV.getAppIcon === 'function') {
+                setTimeout(() => {
+                    try {
+                        const rawIcon = window.AndroidTV.getAppIcon(app.packages);
+                        if (rawIcon && rawIcon.includes("data:image")) {
+                            const [type, src] = rawIcon.split("|");
+                            app.resolvedIcon = src;
+                            if (type === "BANNER") {
+                                card.innerHTML = `<img class="native-banner-img" src="${src}" alt="${app.name}">`;
+                            } else {
+                                card.innerHTML = `<img class="native-icon-img" src="${src}" alt="${app.name}">`;
                             }
-                        } catch (e) {}
-                    }, 30 * index);
-                }
+                        }
+                    } catch (e) {}
+                }, 40 * index);
+            }
 
-                card.onclick = () => launchTvApp(app.packages);
+            card.onclick = () => launchTvApp(app.packages);
 
-                const label = document.createElement('div');
-                label.className = 'app-label';
-                label.innerText = app.name;
+            const label = document.createElement('div');
+            label.className = 'app-label';
+            label.innerText = app.name;
 
-                wrap.appendChild(card);
-                wrap.appendChild(label);
-                appsContainer.appendChild(wrap);
-            });
-        }
-
-        renderAppsDock();
+            wrap.appendChild(card);
+            wrap.appendChild(label);
+            appsContainer.appendChild(wrap);
+        });
 
         CONFIG.hdmiInputs.forEach((hdmi, index) => {
             const btn = document.createElement('div');
@@ -924,54 +1005,29 @@
         });
 
         /* ==========================================================================
-           [15] نافذة تخصيص وتعديل التطبيقات المباشرة
-           ========================================================================== */
-        let isCustomModalOpen = false;
-
-        function openCustomAppsModal() {
-            const grid = document.getElementById('custom-apps-grid');
-            grid.innerHTML = '';
-            CONFIG.favoriteApps.forEach((app, i) => {
-                const slot = document.createElement('div');
-                slot.className = 'custom-slot-card';
-                slot.innerHTML = `
-                    <label>التطبيق رقم ${i + 1}</label>
-                    <input type="text" class="edit-input focusable" id="edit-name-${i}" value="${app.name}" placeholder="اسم التطبيق">
-                    <input type="text" class="edit-input focusable" id="edit-pkg-${i}" value="${app.packages}" placeholder="حزمة أندرويد Package">
-                `;
-                grid.appendChild(slot);
-            });
-            document.getElementById('custom-apps-modal').classList.add('active');
-            isCustomModalOpen = true;
-        }
-
-        function closeCustomAppsModal() {
-            document.getElementById('custom-apps-modal').classList.remove('active');
-            isCustomModalOpen = false;
-            updateFocus();
-        }
-
-        function saveCustomApps() {
-            CONFIG.favoriteApps.forEach((app, i) => {
-                const nameVal = document.getElementById(`edit-name-${i}`).value;
-                const pkgVal = document.getElementById(`edit-pkg-${i}`).value;
-                if (nameVal) app.name = nameVal;
-                if (pkgVal) app.packages = pkgVal;
-            });
-            localStorage.setItem('sony_favorite_apps', JSON.stringify(CONFIG.favoriteApps));
-            renderAppsDock();
-            closeCustomAppsModal();
-            updateFocus();
-        }
-
-        /* ==========================================================================
-           [16] نافذة "كل تطبيقات الجهاز"
+           [15] نافذة "كل تطبيقات الجهاز" السريعة (All Device Apps Drawer)
            ========================================================================== */
         let isModalOpen = false;
+        let modalFocusIdx = 0;
 
         function buildAllAppsDrawer() {
             const grid = document.getElementById('drawer-apps-grid');
             grid.innerHTML = '';
+            let dIdx = 2; // 0 و 1 محجوزان لزر إدارة التطبيقات وزر الإغلاق في أعلى النافذة
+
+            // 1. إذا كان تطبيق التلفزيون يدعم الجلب التلقائي الشامل لكل حزم الجهاز
+            if (window.AndroidTV && typeof window.AndroidTV.getAllApps === 'function') {
+                try {
+                    const allJson = JSON.parse(window.AndroidTV.getAllApps());
+                    allJson.forEach(item => {
+                        const card = createDrawerCard(item.name, item.pkg, item.icon, dIdx++);
+                        grid.appendChild(card);
+                    });
+                    return;
+                } catch (e) {}
+            }
+
+            // 2. عرض كافة التطبيقات الأساسية + الإضافية مع سحب أيقوناتها الأصلية من التلفزيون مباشرة
             const combinedApps = [...CONFIG.favoriteApps, ...CONFIG.extraDeviceApps];
             combinedApps.forEach((app) => {
                 let iconSrc = app.resolvedIcon || "";
@@ -983,21 +1039,32 @@
                         }
                     } catch (e) {}
                 }
-                const card = document.createElement('div');
-                card.className = 'drawer-app-card';
-                card.innerHTML = iconSrc ? `<img src="${iconSrc}" alt="${app.name}"><span>${app.name}</span>` : `<div style="font-size:1.5rem;">📺</div><span>${app.name}</span>`;
-                card.onclick = () => {
-                    closeAllAppsModal();
-                    launchTvApp(app.packages);
-                };
+                const card = createDrawerCard(app.name, app.packages, iconSrc, dIdx++);
                 grid.appendChild(card);
             });
+        }
+
+        function createDrawerCard(name, packages, iconSrc, idx) {
+            const card = document.createElement('div');
+            card.className = 'drawer-app-card drawer-item';
+            card.dataset.didx = idx.toString();
+            const imgHtml = iconSrc
+                ? `<img src="${iconSrc}" alt="${name}">`
+                : `<div style="font-size:1.6rem;">📺</div>`;
+            card.innerHTML = `${imgHtml}<span>${name}</span>`;
+            card.onclick = () => {
+                closeAllAppsModal();
+                launchTvApp(packages);
+            };
+            return card;
         }
 
         function openAllAppsModal() {
             buildAllAppsDrawer();
             document.getElementById('all-apps-modal').classList.add('active');
             isModalOpen = true;
+            modalFocusIdx = 2;
+            updateModalFocus();
         }
 
         function closeAllAppsModal() {
@@ -1008,11 +1075,26 @@
 
         function openNativeAppsSettings() {
             closeAllAppsModal();
+            if (window.AndroidTV && typeof window.AndroidTV.openAllAppsSettings === 'function') {
+                window.AndroidTV.openAllAppsSettings();
+                return;
+            }
             openAndroidSettings();
         }
 
+        function updateModalFocus() {
+            const items = Array.from(document.querySelectorAll('.drawer-item'));
+            items.forEach(el => el.classList.remove('focused'));
+            if (items.length === 0) return;
+            if (modalFocusIdx >= items.length) modalFocusIdx = items.length - 1;
+            if (modalFocusIdx < 0) modalFocusIdx = 0;
+            const target = items[modalFocusIdx];
+            target.classList.add('focused');
+            target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
         /* ==========================================================================
-           [17] دوال التشغيل والتحكم
+           [16] دوال تشغيل التطبيقات والإعدادات والـ HDMI
            ========================================================================== */
         function launchTvApp(packagesCsv) {
             if (window.AndroidTV && typeof window.AndroidTV.launchApp === 'function') {
@@ -1040,14 +1122,43 @@
         }
 
         /* ==========================================================================
-           [18] جلب المباريات المباشرة وتعريب الأندية
+           [17] قاموس تعريب الأندية وجلب المباريات المباشرة
            ========================================================================== */
         const TEAM_TRANSLATIONS = {
-            "Al-Hilal": "الهلال", "Al Hilal": "الهلال", "Al-Nassr": "النصر", "Al Nassr": "النصر",
-            "Al-Ittihad": "الاتحاد", "Al Ittihad": "الاتحاد", "Al-Ahli": "الأهلي", "Al Ahli": "الأهلي",
-            "Liverpool": "ليفربول", "Arsenal": "أرسنال", "Manchester City": "مانشستر سيتي", "Chelsea": "تشيلسي",
-            "Manchester United": "مان يونايتد", "Tottenham Hotspur": "توتنهام", "Newcastle United": "نيوكاسل",
-            "Aston Villa": "أستون فيلا", "Brighton": "برايتون", "West Ham United": "وست هام", "Everton": "إيفرتون"
+            "Al-Hilal": "الهلال", "Al Hilal": "الهلال",
+            "Al-Nassr": "النصر", "Al Nassr": "النصر",
+            "Al-Ittihad": "الاتحاد", "Al Ittihad": "الاتحاد",
+            "Al-Ahli": "الأهلي", "Al Ahli": "الأهلي", "Al-Ahli Saudi FC": "الأهلي",
+            "Al-Shabab": "الشباب", "Al Shabab": "الشباب",
+            "Al-Ettifaq": "الاتفاق", "Al Ettifaq": "الاتفاق",
+            "Al-Taawoun": "التعاون", "Al Taawoun": "التعاون",
+            "Al-Fateh": "الفتح", "Al Fateh": "الفتح",
+            "Damac": "ضمك", "Al-Fayha": "الفيحاء", "Al Fayha": "الفيحاء",
+            "Al-Riyadh": "الرياض", "Al Riyadh": "الرياض",
+            "Al-Qadsiah": "القادسية", "Al Qadsiah": "القادسية",
+            "Al-Khaleej": "الخليج", "Al Khaleej": "الخليج",
+            "Al-Raed": "الرائد", "Al Raed": "الرائد",
+            "Al-Orobah": "العروبة", "Al Orobah": "العروبة",
+            "Al-Kholood": "الخلود", "Al Kholood": "الخلود",
+            "Al-Wehda": "الوحدة", "Al Wehda": "الوحدة",
+            "Al-Okhdood": "الأخدود", "Al Okhdood": "الأخدود",
+            "Liverpool": "ليفربول", "Arsenal": "أرسنال",
+            "Manchester City": "مانشستر سيتي", "Man City": "مانشستر سيتي",
+            "Chelsea": "تشيلسي",
+            "Manchester United": "مان يونايتد", "Man United": "مان يونايتد", "Man Utd": "مان يونايتد",
+            "Tottenham Hotspur": "توتنهام", "Tottenham": "توتنهام", "Spurs": "توتنهام",
+            "Newcastle United": "نيوكاسل", "Newcastle": "نيوكاسل",
+            "Aston Villa": "أستون فيلا",
+            "Brighton & Hove Albion": "برايتون", "Brighton": "برايتون",
+            "West Ham United": "وست هام", "West Ham": "وست هام",
+            "Everton": "إيفرتون", "Fulham": "فولهام", "Brentford": "برينتفورد",
+            "Crystal Palace": "كريستال بالاس",
+            "Wolverhampton Wanderers": "وولفرهامبتون", "Wolves": "وولفرهامبتون",
+            "Nottingham Forest": "نوتنغهام فورست", "Nottm Forest": "نوتنغهام فورست",
+            "Bournemouth": "بورنموث", "AFC Bournemouth": "بورنموث",
+            "Leicester City": "ليستر سيتي", "Leicester": "ليستر سيتي",
+            "Ipswich Town": "إيبسويتش تاون", "Ipswich": "إيبسويتش تاون",
+            "Southampton": "ساوثهامبتون", "Leeds United": "ليدز يونايتد", "Leeds": "ليدز يونايتد"
         };
 
         function translateTeam(englishName) {
@@ -1058,14 +1169,19 @@
         async function fetchLiveMatches() {
             const uiList = document.getElementById('ui-matches-list');
             const ssList = document.getElementById('ss-matches-list');
-            const leagues = [{ code: 'sau.1', label: 'السعودي' }, { code: 'eng.1', label: 'الإنجليزي' }];
+            const leagues = [
+                { code: 'sau.1', label: 'السعودي' },
+                { code: 'eng.1', label: 'الإنجليزي' }
+            ];
             let allMatchesHtml = [];
 
             for (const lg of leagues) {
                 try {
                     const response = await fetch(`https://site.api.espn.com/apis/site/v2/sports/soccer/${lg.code}/scoreboard`);
                     const data = await response.json();
-                    (data.events || []).slice(0, 2).forEach(ev => {
+                    const events = data.events || [];
+
+                    events.slice(0, 2).forEach(ev => {
                         const competition = ev.competitions[0];
                         const home = competition.competitors.find(c => c.homeAway === 'home');
                         const away = competition.competitors.find(c => c.homeAway === 'away');
@@ -1077,16 +1193,32 @@
                         const homeLogo = home.team.logo || "";
                         const awayLogo = away.team.logo || "";
 
-                        let centerInfo = state === 'pre' ? `<span class="score-box" style="font-size:0.78rem;">ضد</span>` : `<span class="score-box">${home.score} - ${away.score}</span>`;
-                        let timeOrStatusBadge = state === 'in' ? `<span class="live-badge"><span class="live-dot"></span>مباشر ${detail}</span>` : (state === 'post' ? `<span style="color:rgba(255,255,255,0.45); font-size:0.8rem;">انتهت</span>` : `<span style="color:var(--accent-color); font-size:0.82rem;">🕒 ${new Date(ev.date).toLocaleTimeString('ar-SA', {hour:'2-digit', minute:'2-digit', hour12:true})}</span>`);
+                        let centerInfo = "";
+                        let timeOrStatusBadge = "";
+
+                        if (state === 'in') {
+                            centerInfo = `<span class="score-box">${home.score} - ${away.score}</span>`;
+                            timeOrStatusBadge = `<span class="live-badge"><span class="live-dot"></span>مباشر ${detail}</span>`;
+                        } else if (state === 'post') {
+                            centerInfo = `<span class="score-box">${home.score} - ${away.score}</span>`;
+                            timeOrStatusBadge = `<span style="color:rgba(255,255,255,0.45); font-size:0.8rem;">انتهت</span>`;
+                        } else {
+                            const matchDate = new Date(ev.date);
+                            const matchTime = matchDate.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit', hour12: true });
+                            centerInfo = `<span class="score-box" style="font-size:0.78rem;">ضد</span>`;
+                            timeOrStatusBadge = `<span style="color:var(--accent-color); font-size:0.82rem;">🕒 ${matchTime}</span>`;
+                        }
+
+                        const homeImgTag = homeLogo ? `<img class="team-logo" src="${homeLogo}" alt="" onerror="this.style.display='none'">` : '';
+                        const awayImgTag = awayLogo ? `<img class="team-logo" src="${awayLogo}" alt="" onerror="this.style.display='none'">` : '';
 
                         allMatchesHtml.push(`
                             <div class="match-row">
                                 <div class="teams-wrapper">
                                     <span class="league-tag">${lg.label}</span>
-                                    <span class="team-item">${homeLogo ? `<img class="team-logo" src="${homeLogo}" alt="">` : ''}<span>${homeName}</span></span>
+                                    <span class="team-item">${homeImgTag}<span>${homeName}</span></span>
                                     ${centerInfo}
-                                    <span class="team-item"><span>${awayName}</span>${awayLogo ? `<img class="team-logo" src="${awayLogo}" alt="">` : ''}</span>
+                                    <span class="team-item"><span>${awayName}</span>${awayImgTag}</span>
                                 </div>
                                 <div>${timeOrStatusBadge}</div>
                             </div>
@@ -1095,13 +1227,16 @@
                 } catch (err) {}
             }
 
-            const finalHtml = allMatchesHtml.length > 0 ? allMatchesHtml.slice(0, 3).join('') : `<div class="match-row">لا توجد مباريات مجدولة حالياً</div>`;
+            const finalHtml = allMatchesHtml.length > 0
+                ? allMatchesHtml.slice(0, 3).join('')
+                : `<div class="match-row">لا توجد مباريات مجدولة حالياً</div>`;
+
             uiList.innerHTML = finalHtml;
             ssList.innerHTML = finalHtml;
         }
 
         /* ==========================================================================
-           [19] نظام التحكم بالريموت
+           [18] التنقل بالريموت وتحديث الخلفية السينمائية حسب التطبيق المحدد
            ========================================================================== */
         let currentRow = 1;
         let currentCol = 0;
@@ -1123,27 +1258,43 @@
             document.getElementById('active-badge').innerText = target.dataset.badge || "SONY BRAVIA XR 4K";
             document.getElementById('active-desc').innerText = target.dataset.desc || "";
 
+            // إذا كان التركيز على أحد التطبيقات، نقوم بتشغيل خلفية الأفلام الخاصة به
             if (target.dataset.appIndex !== undefined) {
                 const appObj = CONFIG.favoriteApps[parseInt(target.dataset.appIndex)];
-                if (appObj && appObj.backdrops) setDynamicAppBackdrop(appObj.backdrops);
+                if (appObj && appObj.backdrops) {
+                    setDynamicAppBackdrop(appObj.backdrops);
+                }
             } else {
                 setDynamicAppBackdrop(null);
             }
         }
 
         window.addEventListener('keydown', (e) => {
+            resetIdleTimer();
             const ss = document.getElementById('screensaver');
+
             if (ss.classList.contains('active')) {
                 toggleScreensaver(false);
                 e.preventDefault();
                 return;
             }
-            if (isModalOpen || isCustomModalOpen) {
+
+            // التحكم داخل نافذة "كل التطبيقات" إذا كانت مفتوحة
+            if (isModalOpen) {
                 if (e.key === 'Backspace' || e.key === 'Escape') {
-                    if (isModalOpen) closeAllAppsModal();
-                    if (isCustomModalOpen) closeCustomAppsModal();
+                    closeAllAppsModal();
                     e.preventDefault();
+                    return;
                 }
+                if (e.key === 'ArrowRight') { modalFocusIdx--; updateModalFocus(); }
+                else if (e.key === 'ArrowLeft') { modalFocusIdx++; updateModalFocus(); }
+                else if (e.key === 'ArrowDown') { modalFocusIdx += 5; updateModalFocus(); }
+                else if (e.key === 'ArrowUp') { modalFocusIdx -= 5; updateModalFocus(); }
+                else if (e.key === 'Enter') {
+                    const focusedModalEl = document.querySelector('.drawer-item.focused');
+                    if (focusedModalEl) focusedModalEl.click();
+                }
+                e.preventDefault();
                 return;
             }
 
@@ -1169,6 +1320,7 @@
             document.getElementById('ui-date').innerText = `${dayName}، ${gregDate}  •  ${hijriDate}`;
             document.getElementById('ss-day').innerText = dayName;
             document.getElementById('ss-full-date').innerText = `${gregDate} — ${hijriDate}`;
+            document.getElementById('ss-city').innerText = CONFIG.cityName;
 
             const nextRamadan = new Date('2027-02-08T00:00:00');
             const diffDays = Math.max(0, Math.ceil((nextRamadan - now) / (1000 * 60 * 60 * 24)));
@@ -1180,34 +1332,55 @@
                 const res = await fetch(`https://api.aladhan.com/v1/timings?latitude=${CONFIG.latitude}&longitude=${CONFIG.longitude}&method=4`);
                 const data = await res.json();
                 const timings = data.data.timings;
-                const prayers = [{ name: "الفجر", time: timings.Fajr }, { name: "الظهر", time: timings.Dhuhr }, { name: "العصر", time: timings.Asr }, { name: "المغرب", time: timings.Maghrib }, { name: "العشاء", time: timings.Isha }];
+                const prayers = [
+                    { name: "الفجر", time: timings.Fajr },
+                    { name: "الظهر", time: timings.Dhuhr },
+                    { name: "العصر", time: timings.Asr },
+                    { name: "المغرب", time: timings.Maghrib },
+                    { name: "العشاء", time: timings.Isha }
+                ];
+
                 const now = new Date();
                 const currentMinutes = now.getHours() * 60 + now.getMinutes();
-                let nextPrayer = prayers[0], diffMinutes = 0;
+                let nextPrayer = prayers[0];
+                let diffMinutes = 0;
 
                 for (let p of prayers) {
                     const [h, m] = p.time.split(':').map(Number);
                     const pMinutes = h * 60 + m;
-                    if (pMinutes > currentMinutes) { nextPrayer = p; diffMinutes = pMinutes - currentMinutes; break; }
+                    if (pMinutes > currentMinutes) {
+                        nextPrayer = p;
+                        diffMinutes = pMinutes - currentMinutes;
+                        break;
+                    }
                 }
+
                 if (diffMinutes === 0) {
                     const [fh, fm] = prayers[0].time.split(':').map(Number);
                     diffMinutes = (24 * 60 - currentMinutes) + (fh * 60 + fm);
                 }
-                const remHours = Math.floor(diffMinutes / 60), remMins = diffMinutes % 60;
+
+                const remHours = Math.floor(diffMinutes / 60);
+                const remMins = diffMinutes % 60;
                 const remText = remHours > 0 ? `بعد ${remHours} ساعة و ${remMins} دقيقة` : `بعد ${remMins} دقيقة`;
+
                 document.getElementById('ui-prayer-mini').innerText = `🕌 الصلاة القادمة: ${nextPrayer.name} (${nextPrayer.time}) — ${remText}`;
                 document.getElementById('ss-prayer-name').innerText = `${nextPrayer.name} ${nextPrayer.time}`;
                 document.getElementById('ss-prayer-rem').innerText = remText;
-            } catch (e) {}
+            } catch (e) {
+                document.getElementById('ui-prayer-mini').innerText = "مواقيت الصلاة: تأكد من الاتصال بالإنترنت";
+            }
         }
 
         async function fetchWeather() {
             try {
                 const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${CONFIG.latitude}&longitude=${CONFIG.longitude}&current_weather=true`);
                 const data = await res.json();
-                document.getElementById('ss-temp').innerText = `${Math.round(data.current_weather.temperature)}° صافي`;
-            } catch (e) {}
+                const temp = Math.round(data.current_weather.temperature);
+                document.getElementById('ss-temp').innerText = `${temp}° صافي`;
+            } catch (e) {
+                document.getElementById('ss-temp').innerText = "--°";
+            }
         }
 
         function toggleScreensaver(show) {
@@ -1216,11 +1389,17 @@
             else ss.classList.remove('active');
         }
 
+        function resetIdleTimer() {
+            clearTimeout(idleTimer);
+            idleTimer = setTimeout(() => toggleScreensaver(true), CONFIG.inactivityTimeoutSeconds * 1000);
+        }
+
         updateClockAndDate();
         updateFocus();
         fetchPrayerTimes();
         fetchWeather();
         fetchLiveMatches();
+        resetIdleTimer();
 
         setInterval(updateClockAndDate, 1000);
         setInterval(fetchLiveMatches, 60000);
