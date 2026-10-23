@@ -19,55 +19,20 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: 3. Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: 4. Generate Native Android TV Project & Java Bridge
+      - name: 3. Build Native Android TV APK Directly
         run: |
-          mkdir -p android-app/app/src/main/java/com/ahmed/sonytv
-          mkdir -p android-app/app/src/main/res/values
+          mkdir -p build/src/com/ahmed/sonytv
+          mkdir -p build/obj
 
-          # إعداد ملفات Gradle للبناء
-          cat << 'EOF' > android-app/settings.gradle
-          rootProject.name = "SonyTVLauncher"
-          include ':app'
-          EOF
-
-          cat << 'EOF' > android-app/build.gradle
-          buildscript {
-              repositories { google(); mavenCentral() }
-              dependencies { classpath 'com.android.tools.build:gradle:8.1.0' }
-          }
-          allprojects {
-              repositories { google(); mavenCentral() }
-          }
-          EOF
-
-          cat << 'EOF' > android-app/app/build.gradle
-          apply plugin: 'com.android.application'
-          android {
-              namespace 'com.ahmed.sonytv'
-              compileSdkVersion 34
-              defaultConfig {
-                  applicationId "com.ahmed.sonytv"
-                  minSdkVersion 23
-                  targetSdkVersion 34
-                  versionCode 2
-                  versionName "2.0"
-              }
-              buildTypes {
-                  debug {
-                      minifyEnabled false
-                  }
-              }
-          }
-          EOF
-
-          # إنشاء ملف AndroidManifest لدعم Android TV والعمل كلانشر
-          cat << 'EOF' > android-app/app/src/main/AndroidManifest.xml
+          # 1. إنشاء ملف تعريف النظام AndroidManifest.xml
+          cat << 'EOF' > build/AndroidManifest.xml
           <?xml version="1.0" encoding="utf-8"?>
           <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-              package="com.ahmed.sonytv">
+              package="com.ahmed.sonytv"
+              android:versionCode="3"
+              android:versionName="3.0">
+
+              <uses-sdk android:minSdkVersion="23" android:targetSdkVersion="33" />
               <uses-permission android:name="android.permission.INTERNET" />
               <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
               <uses-feature android:name="android.software.leanback" android:required="false" />
@@ -78,7 +43,7 @@ jobs:
                   android:usesCleartextTraffic="true"
                   android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
                   <activity
-                      android:name=".MainActivity"
+                      android:name="com.ahmed.sonytv.MainActivity"
                       android:exported="true"
                       android:screenOrientation="landscape"
                       android:configChanges="orientation|screenSize|keyboardHidden">
@@ -94,22 +59,28 @@ jobs:
           </manifest>
           EOF
 
-          # إنشاء كود الجافا الأصلي (MainActivity.java) مع جسر فتح التطبيقات المباشر بدون متصفح
-          cat << 'EOF' > android-app/app/src/main/java/com/ahmed/sonytv/MainActivity.java
+          # 2. إنشاء كود الجافا الأصلي لسحب أيقونات التلفزيون وفتح التطبيقات مباشرة
+          cat << 'EOF' > build/src/com/ahmed/sonytv/MainActivity.java
           package com.ahmed.sonytv;
 
           import android.app.Activity;
           import android.content.Intent;
+          import android.content.pm.ApplicationInfo;
           import android.content.pm.PackageManager;
+          import android.graphics.Bitmap;
+          import android.graphics.Canvas;
+          import android.graphics.drawable.Drawable;
           import android.net.Uri;
           import android.os.Bundle;
           import android.provider.Settings;
+          import android.util.Base64;
           import android.view.KeyEvent;
-          import android.view.View;
           import android.webkit.JavascriptInterface;
           import android.webkit.WebSettings;
           import android.webkit.WebView;
           import android.webkit.WebViewClient;
+          import java.io.ByteArrayOutputStream;
+          import java.util.List;
 
           public class MainActivity extends Activity {
               private WebView webView;
@@ -125,63 +96,108 @@ jobs:
                   ws.setJavaScriptEnabled(true);
                   ws.setDomStorageEnabled(true);
                   ws.setMediaPlaybackRequiresUserGesture(false);
-                  ws.setCacheMode(WebSettings.LOAD_DEFAULT);
+                  ws.setCacheMode(WebSettings.LOAD_NO_CACHE);
 
-                  // ربط الجسر البرمجي المباشر مع كود الجافاسكربت في index.html
                   webView.addJavascriptInterface(new TvBridge(), "AndroidTV");
-
-                  webView.setWebViewClient(new WebViewClient() {
-                      @Override
-                      public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                          if (url.startsWith("intent:")) {
-                              try {
-                                  Intent intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
-                                  String pkg = intent.getPackage();
-                                  if (pkg != null) {
-                                      launchPackageDirectly(pkg);
-                                      return true;
-                                  }
-                                  startActivity(intent);
-                              } catch (Exception e) {}
-                              return true;
-                          }
-                          return false;
-                      }
-                  });
-
+                  webView.setWebViewClient(new WebViewClient());
                   webView.loadUrl(UI_URL);
               }
 
-              private void launchPackageDirectly(String pkg) {
-                  try {
-                      PackageManager pm = getPackageManager();
-                      // 1. محاولة الفتح كبرنامج تلفزيون أندرويد رسمي (Leanback)
-                      Intent leanback = pm.getLeanbackLaunchIntentForPackage(pkg);
-                      if (leanback != null) {
-                          leanback.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                          startActivity(leanback);
-                          return;
+              private String resolvePackage(String candidatesCsv) {
+                  PackageManager pm = getPackageManager();
+                  String[] parts = candidatesCsv.split(",");
+                  for (String p : parts) {
+                      String pkg = p.trim();
+                      try {
+                          pm.getPackageInfo(pkg, 0);
+                          return pkg;
+                      } catch (Exception ignored) {}
+                  }
+                  // البحث الذكي بالاسم إذا كان اسم الحزمة مختلفاً في منطقة الشرق الأوسط
+                  List<ApplicationInfo> apps = pm.getInstalledApplications(0);
+                  for (String p : parts) {
+                      String key = p.trim().toLowerCase();
+                      for (ApplicationInfo app : apps) {
+                          String pkgName = app.packageName.toLowerCase();
+                          String label = pm.getApplicationLabel(app).toString().toLowerCase();
+                          if (pkgName.contains(key) || label.contains(key)) {
+                              return app.packageName;
+                          }
                       }
-                      // 2. محاولة الفتح كبرنامج أندرويد عادي
-                      Intent normal = pm.getLaunchIntentForPackage(pkg);
-                      if (normal != null) {
-                          normal.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                          startActivity(normal);
-                      }
-                  } catch (Exception e) {}
+                  }
+                  return parts[0].trim();
               }
 
               public class TvBridge {
+                  // سحب البنر الأصلي أو الأيقونة الأصلية من داخل نظام تلفزيون سوني
                   @JavascriptInterface
-                  public void launchApp(String packageName) {
-                      launchPackageDirectly(packageName);
+                  public String getAppIcon(String candidatesCsv) {
+                      try {
+                          PackageManager pm = getPackageManager();
+                          String pkg = resolvePackage(candidatesCsv);
+                          Drawable d = null;
+
+                          // محاولة جلب البنر العريض الرسمي لشاشات Android TV أولاً
+                          try { d = pm.getApplicationBanner(pkg); } catch (Exception ignored) {}
+                          if (d == null) {
+                              Intent lb = pm.getLeanbackLaunchIntentForPackage(pkg);
+                              if (lb != null) {
+                                  try { d = pm.getActivityBanner(lb); } catch (Exception ignored) {}
+                                  if (d == null) {
+                                      try { d = pm.getActivityIcon(lb); } catch (Exception ignored) {}
+                                  }
+                              }
+                          }
+                          // إذا لم يتوفر بنر عريض، نسحب أيقونة التطبيق الأصلية عالية الدقة
+                          if (d == null) {
+                              d = pm.getApplicationIcon(pkg);
+                          }
+                          if (d == null) return "";
+
+                          int w = d.getIntrinsicWidth() > 0 ? d.getIntrinsicWidth() : 320;
+                          int h = d.getIntrinsicHeight() > 0 ? d.getIntrinsicHeight() : 180;
+                          Bitmap bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+                          Canvas canvas = new Canvas(bmp);
+                          d.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+                          d.draw(canvas);
+
+                          ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                          bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                          String b64 = Base64.encodeToString(baos.toByteArray(), Base64.NO_WRAP);
+                          boolean isBanner = (w > h * 1.2);
+                          return (isBanner ? "BANNER|" : "ICON|") + "data:image/png;base64," + b64;
+                      } catch (Exception e) {
+                          return "";
+                      }
+                  }
+
+                  // فتح التطبيق مباشرة من نظام التلفزيون بدون أي متصفح أو متجر
+                  @JavascriptInterface
+                  public void launchApp(String candidatesCsv) {
+                      try {
+                          PackageManager pm = getPackageManager();
+                          String pkg = resolvePackage(candidatesCsv);
+                          Intent leanback = pm.getLeanbackLaunchIntentForPackage(pkg);
+                          if (leanback != null) {
+                              leanback.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                              startActivity(leanback);
+                              return;
+                          }
+                          Intent normal = pm.getLaunchIntentForPackage(pkg);
+                          if (normal != null) {
+                              normal.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                              startActivity(normal);
+                          }
+                      } catch (Exception ignored) {}
                   }
 
                   @JavascriptInterface
                   public void openSettings() {
                       try {
-                          startActivity(new Intent(Settings.ACTION_SETTINGS));
-                      } catch (Exception e) {}
+                          Intent i = new Intent(Settings.ACTION_SETTINGS);
+                          i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                          startActivity(i);
+                      } catch (Exception ignored) {}
                   }
 
                   @JavascriptInterface
@@ -191,7 +207,7 @@ jobs:
                           Intent i = new Intent(Intent.ACTION_VIEW, uri);
                           i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                           startActivity(i);
-                      } catch (Exception e) {}
+                      } catch (Exception ignored) {}
                   }
               }
 
@@ -206,13 +222,21 @@ jobs:
           }
           EOF
 
-      - name: 5. Compile APK with Gradle
-        run: |
-          cd android-app
-          gradle assembleDebug
+          # 3. تجميع وبناء ملف الـ APK وتوقيعه رسمياً
+          BUILD_TOOLS=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -n 1)
+          PLATFORM=$(ls -d $ANDROID_HOME/platforms/android-* | sort -V | tail -n 1)
 
-      - name: 6. Upload Ready Sony TV APK
+          javac -source 1.8 -target 1.8 -bootclasspath "$PLATFORM/android.jar" -cp "$PLATFORM/android.jar" -d build/obj build/src/com/ahmed/sonytv/MainActivity.java
+          "$BUILD_TOOLS/d8" --lib "$PLATFORM/android.jar" --output build/ build/obj/com/ahmed/sonytv/*.class
+          "$BUILD_TOOLS/aapt" package -f -M build/AndroidManifest.xml -I "$PLATFORM/android.jar" -F build/unaligned.apk
+          cd build
+          zip -uj unaligned.apk classes.dex
+          "$BUILD_TOOLS/zipalign" -f 4 unaligned.apk aligned.apk
+          keytool -genkeypair -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=SonyTV,O=Ahmed,C=SA"
+          "$BUILD_TOOLS/apksigner" sign --ks debug.keystore --ks-pass pass:android --key-pass pass:android --out Sony-4K-Launcher.apk aligned.apk
+
+      - name: 4. Upload Sony TV APK
         uses: actions/upload-artifact@v4
         with:
           name: Sony-4K-Launcher-APK
-          path: android-app/app/build/outputs/apk/debug/app-debug.apk
+          path: build/Sony-4K-Launcher.apk
