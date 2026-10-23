@@ -3,13 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sony 4K Dark Launcher</title>
+    <title>Sony 4K Native TV Launcher</title>
     <link rel="manifest" href="./manifest.json">
     <style>
         /* ==========================================================================
-           [1] استيراد خطوط الشاشات الاحترافية (Cairo + Readex Pro)
+           [1] استيراد أفضل 4 خطوط عربية رسمية لشاشات التلفزيون
+           - Almarai (المراعي): خط شاشات التلفزيون الحديث والواضح جداً (الافتراضي)
+           - IBM Plex Sans Arabic: الخط التقني الفاخر الشبيه بنظام أبل
+           - Rubik: خط عصري ناعم الحواف
+           - Noto Kufi Arabic: الخط الكوفي الهندسي الرسمي
            ========================================================================== */
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Readex+Pro:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@400;600;700;800&family=Rubik:wght@400;500;700;800&display=swap');
+
+        :root {
+            --main-font: 'Almarai', sans-serif;
+            --bg-gradient: radial-gradient(circle at 80% 15%, #111827 0%, #05070c 55%, #020305 100%);
+            --accent-color: #38bdf8;
+        }
 
         * {
             box-sizing: border-box;
@@ -20,8 +30,8 @@
         }
 
         body {
-            font-family: 'Readex Pro', 'Cairo', sans-serif;
-            background-color: #030407;
+            font-family: var(--main-font);
+            background: #020305;
             color: #ffffff;
             height: 100vh;
             width: 100vw;
@@ -30,26 +40,25 @@
         }
 
         /* ==========================================================================
-           [2] الخلفية السينمائية الداكنة (Dark 4K Aesthetic) لإبراز جمال الأيقونات
+           [2] الخلفية الداكنة الصافية (Pure Dark OLED Studio) بدون صور مشتتة
            ========================================================================== */
         #bg-layer {
             position: absolute;
             inset: 0;
-            background-size: cover;
-            background-position: center;
-            filter: brightness(0.42) contrast(1.15) saturate(1.1);
-            transition: background-image 0.8s ease;
+            background: var(--bg-gradient);
+            transition: background 0.6s ease;
             z-index: 1;
         }
 
-        /* تدرج سينمائي داكن جداً (Vignette) يجعل الألوان تشع بوضوح 4K */
-        #bg-overlay {
+        /* إضاءة محيطية سينمائية خافتة جداً في الخلفية لإبراز الأيقونات */
+        #bg-glow {
             position: absolute;
             inset: 0;
             background: 
-                radial-gradient(circle at 75% 25%, rgba(18, 28, 52, 0.25) 0%, rgba(3, 4, 7, 0.92) 70%),
-                linear-gradient(to bottom, rgba(3, 4, 7, 0.5) 0%, rgba(3, 4, 7, 0.75) 55%, #030407 100%);
+                radial-gradient(circle at 20% 85%, rgba(56, 189, 248, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 85% 20%, rgba(255, 255, 255, 0.04) 0%, transparent 45%);
             z-index: 2;
+            pointer-events: none;
         }
 
         #main-ui {
@@ -59,11 +68,11 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 26px 52px 24px 52px;
+            padding: 26px 50px 22px 50px;
         }
 
         /* ==========================================================================
-           [3] الشريط العلوي والأزرار الزجاجية الداكنة (بدون حدود بيضاء مزعجة)
+           [3] الشريط العلوي وأزرار التحكم (بما فيها زر تغيير الخط والخلفية)
            ========================================================================== */
         .top-bar {
             display: flex;
@@ -74,22 +83,20 @@
         .status-box {
             display: flex;
             flex-direction: column;
-            gap: 3px;
+            gap: 5px;
         }
 
         .clock-display {
-            font-family: 'Cairo', sans-serif;
             font-size: 2.5rem;
             font-weight: 800;
             line-height: 1;
             letter-spacing: 0.5px;
-            color: #f8fafc;
-            text-shadow: 0 8px 24px rgba(0, 0, 0, 0.9);
+            color: #ffffff;
         }
 
         .sub-info {
             font-size: 0.92rem;
-            color: rgba(255, 255, 255, 0.65);
+            color: rgba(255, 255, 255, 0.6);
             font-weight: 400;
         }
 
@@ -97,13 +104,12 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            margin-top: 4px;
+            margin-top: 2px;
             font-size: 0.88rem;
-            color: #38bdf8;
-            font-weight: 500;
+            color: var(--accent-color);
+            font-weight: 700;
         }
 
-        /* أزرار علوية انسيابية بتصميم زجاجي داكن غير بارز */
         .top-actions {
             display: flex;
             gap: 10px;
@@ -111,78 +117,72 @@
 
         .glass-btn {
             background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            color: rgba(255, 255, 255, 0.78);
-            padding: 8px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.82);
+            padding: 9px 16px;
             border-radius: 12px;
-            font-size: 0.88rem;
-            font-family: 'Readex Pro', sans-serif;
-            font-weight: 500;
+            font-size: 0.85rem;
+            font-family: inherit;
+            font-weight: 700;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+            gap: 7px;
+            transition: all 0.22s ease;
         }
 
         /* ==========================================================================
-           [4] المنطقة الوسطى: عنوان التطبيق المختار + لوحة المباريات السوداء الفخمة
+           [4] المنطقة الوسطى + لوحة المباريات السوداء النقية
            ========================================================================== */
         .middle-section {
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
             margin-top: auto;
-            margin-bottom: 22px;
+            margin-bottom: 20px;
             gap: 30px;
         }
 
         .hero-preview {
-            max-width: 48%;
+            max-width: 46%;
         }
 
         .hero-badge {
             display: inline-block;
-            font-size: 0.72rem;
-            font-weight: 600;
-            color: #38bdf8;
-            background: rgba(56, 189, 248, 0.12);
-            border: 1px solid rgba(56, 189, 248, 0.25);
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.22);
             padding: 3px 10px;
             border-radius: 6px;
             margin-bottom: 8px;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.8px;
         }
 
         .hero-title {
-            font-family: 'Cairo', sans-serif;
-            font-size: 2.6rem;
-            font-weight: 900;
-            line-height: 1.15;
+            font-size: 2.5rem;
+            font-weight: 800;
+            line-height: 1.2;
             margin-bottom: 6px;
             color: #ffffff;
-            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.95);
         }
 
         .hero-subtitle {
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.62);
+            font-size: 0.98rem;
+            color: rgba(255, 255, 255, 0.58);
             font-weight: 400;
+            line-height: 1.4;
         }
 
-        /* لوحة المباريات بتصميم زجاجي أسود عميق */
         .matches-panel {
-            background: rgba(10, 12, 18, 0.72);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.035);
+            border: 1px solid rgba(255, 255, 255, 0.07);
             border-radius: 18px;
             padding: 14px 20px;
             min-width: 510px;
             max-width: 560px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65);
         }
 
         .matches-header {
@@ -190,11 +190,11 @@
             justify-content: space-between;
             align-items: center;
             font-size: 0.82rem;
-            color: rgba(255, 255, 255, 0.55);
+            color: rgba(255, 255, 255, 0.5);
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             padding-bottom: 8px;
             margin-bottom: 8px;
-            font-weight: 500;
+            font-weight: 700;
         }
 
         .match-row {
@@ -202,7 +202,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 7px 0;
-            font-size: 0.94rem;
+            font-size: 0.92rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             gap: 12px;
             white-space: nowrap;
@@ -224,15 +224,14 @@
             display: inline-flex;
             align-items: center;
             gap: 7px;
-            font-weight: 600;
-            color: #f1f5f9;
+            font-weight: 700;
+            color: #f8fafc;
         }
 
         .team-logo {
             width: 24px;
             height: 24px;
             object-fit: contain;
-            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
         }
 
         .league-tag {
@@ -241,19 +240,17 @@
             border-radius: 6px;
             background: rgba(255, 255, 255, 0.07);
             color: rgba(255, 255, 255, 0.7);
-            font-weight: 500;
+            font-weight: 700;
         }
 
         .score-box {
-            background: rgba(255, 255, 255, 0.09);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.08);
             padding: 2px 10px;
-            border-radius: 8px;
-            font-weight: 700;
+            border-radius: 7px;
+            font-weight: 800;
             font-size: 0.88rem;
             min-width: 48px;
             text-align: center;
-            color: #e2e8f0;
         }
 
         .live-badge {
@@ -266,7 +263,7 @@
             padding: 2px 8px;
             border-radius: 8px;
             font-size: 0.74rem;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .live-dot {
@@ -283,15 +280,13 @@
         }
 
         /* ==========================================================================
-           [5] أيقونات التطبيقات العائمة مباشرة على الشاشة (بدون مستطيل خلفي!)
+           [5] شريط أيقونات التلفزيون الأصلية (عائمة بدون مستطيل خلفي)
            ========================================================================== */
         .apps-row {
             display: flex;
             gap: 20px;
-            /* بدون أي خلفية أو إطار مستطيل حول التطبيقات */
             background: transparent;
-            border: none;
-            padding: 14px 6px 18px 6px;
+            padding: 16px 8px 16px 8px;
             margin-bottom: 6px;
             align-items: center;
             overflow-x: auto;
@@ -302,53 +297,54 @@
             display: none;
         }
 
-        /* حاوية كل تطبيق: تحمل الأيقونة الصافية + اسم يظهر عند التركيز فقط */
         .app-item-wrap {
             display: flex;
             flex-direction: column;
             align-items: center;
             flex-shrink: 0;
-            position: relative;
         }
 
-        /* بطاقة الأيقونة بنفس أبعاد ولمعة Apple TV 4K */
         .app-card {
-            width: 156px;
+            width: 160px;
             height: 92px;
-            border-radius: 20px;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             position: relative;
-            transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s ease;
-            box-shadow: 
-                0 14px 28px rgba(0, 0, 0, 0.75),
-                inset 0 1px 1px rgba(255, 255, 255, 0.22);
+            transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease;
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.85), inset 0 1px 1px rgba(255, 255, 255, 0.15);
             overflow: hidden;
-            direction: ltr !important;
+            background: #111318;
         }
 
-        /* لمعة زجاجية علوية خفيفة تعطي عمق 4K للأيقونة */
-        .app-card::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 45%);
-            pointer-events: none;
+        /* تنسيق البنر الأصلي المسحوب من التلفزيون ليملأ البطاقة بالكامل بدقة 4K */
+        .native-banner-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
 
-        /* اسم التطبيق يظهر خارج البطاقة في الأسفل عند الوقوف عليها فقط */
+        /* تنسيق الأيقونة الأصلية المسحوبة من التلفزيون إذا كانت مربعة */
+        .native-icon-img {
+            width: 64px;
+            height: 64px;
+            object-fit: contain;
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.6));
+        }
+
         .app-label {
             margin-top: 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.35);
-            transition: color 0.25s ease, transform 0.25s ease;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.38);
+            transition: color 0.22s ease, transform 0.22s ease;
         }
 
         /* ==========================================================================
-           [6] أزرار المداخل (HDMI) بتصميم كبسولات داكنة أنيقة
+           [6] أزرار المداخل HDMI
            ========================================================================== */
         .bottom-bar {
             display: flex;
@@ -365,17 +361,17 @@
         .hdmi-title {
             font-size: 0.82rem;
             color: rgba(255, 255, 255, 0.45);
-            margin-left: 8px;
-            font-weight: 500;
+            margin-left: 6px;
+            font-weight: 700;
         }
 
         .hdmi-pill {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.07);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             padding: 6px 20px;
             border-radius: 10px;
-            font-size: 0.86rem;
-            font-weight: 600;
+            font-size: 0.85rem;
+            font-weight: 700;
             color: rgba(255, 255, 255, 0.7);
             cursor: pointer;
             transition: all 0.22s ease;
@@ -383,14 +379,11 @@
         }
 
         /* ==========================================================================
-           [7] تأثيرات التركيز بالريموت (Apple TV 4K Focus Effect)
+           [7] تأثير التركيز بالريموت
            ========================================================================== */
         .app-card.focused {
-            transform: scale(1.15) translateY(-6px);
-            box-shadow: 
-                0 22px 44px rgba(0, 0, 0, 0.95),
-                0 0 0 3px #ffffff,
-                0 0 25px rgba(255, 255, 255, 0.35);
+            transform: scale(1.14) translateY(-5px);
+            box-shadow: 0 22px 45px rgba(0, 0, 0, 0.95), 0 0 0 3px #ffffff;
             z-index: 10;
         }
 
@@ -401,15 +394,14 @@
 
         .glass-btn.focused, .hdmi-pill.focused {
             background: #ffffff;
-            color: #05070b;
+            color: #030407;
             border-color: #ffffff;
-            transform: scale(1.07);
-            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.3);
-            font-weight: 700;
+            transform: scale(1.06);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.25);
         }
 
         /* ==========================================================================
-           [8] شاشة التوقف الذكية (Dark Screensaver)
+           [8] شاشة التوقف الداكنة
            ========================================================================== */
         #screensaver {
             position: absolute;
@@ -419,8 +411,7 @@
             flex-direction: column;
             justify-content: space-between;
             padding: 50px 70px;
-            background-size: cover;
-            background-position: center;
+            background: var(--bg-gradient);
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.6s ease;
@@ -431,19 +422,10 @@
             pointer-events: auto;
         }
 
-        .ss-overlay {
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle, rgba(4,6,10,0.45) 0%, rgba(3,4,7,0.92) 100%);
-            z-index: -1;
-        }
-
         .ss-big-clock {
-            font-family: 'Cairo', sans-serif;
-            font-size: 6.5rem;
-            font-weight: 300;
+            font-size: 6.2rem;
+            font-weight: 800;
             line-height: 1;
-            text-shadow: 0 10px 35px rgba(0,0,0,0.9);
         }
 
         .ss-bottom-widgets {
@@ -451,25 +433,25 @@
             grid-template-columns: 1fr 0.8fr 1.8fr;
             gap: 28px;
             align-items: end;
-            border-top: 1px solid rgba(255,255,255,0.12);
+            border-top: 1px solid rgba(255,255,255,0.1);
             padding-top: 20px;
         }
 
         .widget-box h4 {
-            font-size: 0.88rem;
-            color: rgba(255,255,255,0.55);
+            font-size: 0.86rem;
+            color: rgba(255,255,255,0.5);
             font-weight: 400;
             margin-bottom: 4px;
         }
 
         .widget-box .w-main {
-            font-size: 1.45rem;
+            font-size: 1.4rem;
             font-weight: 700;
         }
 
         .widget-box .w-sub {
-            font-size: 0.88rem;
-            color: rgba(255,255,255,0.7);
+            font-size: 0.86rem;
+            color: rgba(255,255,255,0.65);
             margin-top: 2px;
         }
     </style>
@@ -477,9 +459,8 @@
 <body>
 
     <div id="bg-layer"></div>
-    <div id="bg-overlay"></div>
+    <div id="bg-glow"></div>
 
-    <!-- الواجهة الرئيسية -->
     <div id="main-ui">
         <!-- الشريط العلوي -->
         <div class="top-bar">
@@ -489,13 +470,19 @@
                 <div class="prayer-pill" id="ui-prayer-mini">🕌 الصلاة القادمة: ...</div>
             </div>
             <div class="top-actions">
-                <button class="glass-btn focusable" data-row="0" data-col="0" data-title="شاشة التوقف الذكية" data-desc="عرض الساعة السينمائية، مواقيت الصلاة، الطقس، والمباريات" onclick="toggleScreensaver(true)">
+                <button class="glass-btn focusable" data-row="0" data-col="0" data-title="تغيير الخط العربي" data-desc="اضغط للتبديل الفوري بين أفضل 4 خطوط عربية لشاشات التلفزيون" onclick="cycleFont()">
+                    <span>🔤</span><span id="font-btn-label">الخط: المراعي</span>
+                </button>
+                <button class="glass-btn focusable" data-row="0" data-col="1" data-title="تغيير الثيم الداكن" data-desc="اضغط للتبديل بين 5 خلفيات داكنة صافية بدون صور مزعجة" onclick="cycleTheme()">
+                    <span>🎨</span><span id="theme-btn-label">الخلفية: أسود ملكي</span>
+                </button>
+                <button class="glass-btn focusable" data-row="0" data-col="2" data-title="شاشة التوقف الذكية" data-desc="عرض الساعة السينمائية، مواقيت الصلاة، الطقس، والمباريات" onclick="toggleScreensaver(true)">
                     <span>🌙</span><span>شاشة التوقف</span>
                 </button>
-                <button class="glass-btn focusable" data-row="0" data-col="1" data-title="تحديث النتائج المباشرة" data-desc="مزامنة فورية لنتائج الدوري السعودي والدوري الإنجليزي الممتاز" onclick="fetchLiveMatches()">
-                    <span>⚽</span><span>تحديث النتائج</span>
+                <button class="glass-btn focusable" data-row="0" data-col="3" data-title="تحديث النتائج" data-desc="تحديث فوري لنتائج مباريات الدوري السعودي والإنجليزي" onclick="fetchLiveMatches()">
+                    <span>⚽</span><span>تحديث</span>
                 </button>
-                <button class="glass-btn focusable" data-row="0" data-col="2" data-title="إعدادات تلفزيون سوني" data-desc="فتح لوحة إعدادات نظام أندرويد تي في مباشرة" onclick="openAndroidSettings()">
+                <button class="glass-btn focusable" data-row="0" data-col="4" data-title="إعدادات تلفزيون سوني" data-desc="فتح إعدادات نظام أندرويد تي في" onclick="openAndroidSettings()">
                     <span>⚙️</span><span>الإعدادات</span>
                 </button>
             </div>
@@ -504,24 +491,23 @@
         <!-- القسم الأوسط -->
         <div class="middle-section">
             <div class="hero-preview">
-                <div class="hero-badge">SONY BRAVIA 4K</div>
+                <div class="hero-badge">SONY BRAVIA XR 4K</div>
                 <div class="hero-title" id="active-title">Apple TV</div>
-                <div class="hero-subtitle" id="active-desc">الأفلام والمسلسلات والعروض الحصرية بجودة 4K HDR</div>
+                <div class="hero-subtitle" id="active-desc">الأفلام والمسلسلات والعروض الحصرية بجودة 4K</div>
             </div>
 
-            <!-- لوحة نتائج المباريات -->
             <div class="matches-panel">
                 <div class="matches-header">
                     <span>⚽ مباريات الدوري السعودي والإنجليزي</span>
-                    <span id="matches-status-text" style="color:#38bdf8;">مباشر وتلقائي</span>
+                    <span id="matches-status-text" style="color:var(--accent-color);">محدّث تلقائياً</span>
                 </div>
                 <div id="ui-matches-list">
-                    <div class="match-row">جاري جلب جدول المباريات...</div>
+                    <div class="match-row">جاري جلب المباريات...</div>
                 </div>
             </div>
         </div>
 
-        <!-- القسم السفلي: أيقونات التطبيقات العائمة مباشرة + شريط المداخل -->
+        <!-- القسم السفلي: أيقونات التطبيقات + المداخل -->
         <div>
             <div class="apps-row" id="apps-container"></div>
 
@@ -535,15 +521,14 @@
 
     <!-- شاشة التوقف -->
     <div id="screensaver" onclick="toggleScreensaver(false)">
-        <div class="ss-overlay"></div>
         <div style="display:flex; justify-content:space-between; align-items:flex-start;">
             <div>
-                <div style="font-size: 1.6rem; font-weight: 700;" id="ss-day">--</div>
-                <div style="font-size: 1.05rem; opacity: 0.75;" id="ss-full-date">--</div>
+                <div style="font-size: 1.6rem; font-weight: 800;" id="ss-day">--</div>
+                <div style="font-size: 1.05rem; opacity: 0.7;" id="ss-full-date">--</div>
             </div>
             <div style="text-align: left;">
                 <div style="font-size: 1.25rem; font-weight: 700;" id="ss-city">مكة المكرمة</div>
-                <div style="font-size: 2rem; font-weight: 300; color:#38bdf8;" id="ss-temp">--° صافي</div>
+                <div style="font-size: 2rem; font-weight: 400; color:var(--accent-color);" id="ss-temp">--° صافي</div>
             </div>
         </div>
 
@@ -571,7 +556,51 @@
 
     <script>
         /* ==========================================================================
-           [9] إعدادات الواجهة، الخلفيات الداكنة 4K، والشعارات الأصلية للتطبيقات
+           [9] نظام التبديل الفوري للخطوط العربية والخلفيات الداكنة الصافية
+           ========================================================================== */
+        const FONTS_LIST = [
+            { name: "المراعي", css: "'Almarai', sans-serif" },
+            { name: "آي بي إم بلكس", css: "'IBM Plex Sans Arabic', sans-serif" },
+            { name: "روبيك", css: "'Rubik', sans-serif" },
+            { name: "نوتو كوفي", css: "'Noto Kufi Arabic', sans-serif" }
+        ];
+
+        const THEMES_LIST = [
+            { name: "أسود ملكي", grad: "radial-gradient(circle at 80% 15%, #111827 0%, #05070c 55%, #020305 100%)" },
+            { name: "فحمي داكن OLED", grad: "linear-gradient(180deg, #09090b 0%, #030304 65%, #000000 100%)" },
+            { name: "كحلي أبل الليلي", grad: "radial-gradient(circle at 75% 20%, #0f2547 0%, #050b16 60%, #020408 100%)" },
+            { name: "تيتانيوم سوني", grad: "radial-gradient(circle at 75% 20%, #1e242b 0%, #0b0e12 65%, #040507 100%)" },
+            { name: "زمردي عميق", grad: "radial-gradient(circle at 80% 15%, #062c24 0%, #03110e 60%, #010504 100%)" }
+        ];
+
+        let currentFontIdx = parseInt(localStorage.getItem('sony_font_idx') || '0');
+        let currentThemeIdx = parseInt(localStorage.getItem('sony_theme_idx') || '0');
+
+        function applyFontAndTheme() {
+            const f = FONTS_LIST[currentFontIdx] || FONTS_LIST[0];
+            const t = THEMES_LIST[currentThemeIdx] || THEMES_LIST[0];
+            document.documentElement.style.setProperty('--main-font', f.css);
+            document.documentElement.style.setProperty('--bg-gradient', t.grad);
+            document.getElementById('font-btn-label').innerText = `الخط: ${f.name}`;
+            document.getElementById('theme-btn-label').innerText = `الخلفية: ${t.name}`;
+        }
+
+        function cycleFont() {
+            currentFontIdx = (currentFontIdx + 1) % FONTS_LIST.length;
+            localStorage.setItem('sony_font_idx', currentFontIdx.toString());
+            applyFontAndTheme();
+        }
+
+        function cycleTheme() {
+            currentThemeIdx = (currentThemeIdx + 1) % THEMES_LIST.length;
+            localStorage.setItem('sony_theme_idx', currentThemeIdx.toString());
+            applyFontAndTheme();
+        }
+
+        applyFontAndTheme();
+
+        /* ==========================================================================
+           [10] قائمة التطبيقات الـ 11 مع حزمها الرسمية لسحب أيقونة النظام من التلفزيون
            ========================================================================== */
         const CONFIG = {
             cityName: "مكة المكرمة",
@@ -579,92 +608,83 @@
             longitude: 39.8262,
             inactivityTimeoutSeconds: 600,
 
-            // خلفيات 4K داكنة وفخمة جداً (Dark Mode Cinema)
-            timeBackgrounds: {
-                fajr: "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=85",
-                day: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=1920&q=85",
-                sunset: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1920&q=85",
-                night: "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=1920&q=85"
-            },
-
-            // قائمة التطبيقات الـ 11 بأيقوناتها الأصلية الكاملة (بدون نصوص مكررة داخل البطاقة)
             favoriteApps: [
                 {
                     name: "Apple TV",
                     desc: "الأفلام والمسلسلات والعروض الحصرية بجودة 4K Dolby Vision",
-                    bg: "radial-gradient(circle at 50% 0%, #2c2c2e 0%, #0d0d0f 100%)",
-                    package: "com.apple.atve.sony.appletv",
-                    logo: `<svg viewBox="0 0 170 70" width="110" height="48"><path fill="#fff" d="M52.4 36.6c-.1-5.6 2.5-9.8 7.6-12.9-2.9-4.1-7.2-6.3-12.9-6.8-5.4-.4-11.3 3.2-13.5 3.2-2.3 0-7.5-3-11.6-3-8.6.1-17.6 6.7-17.6 20.2 0 6 2.2 12.4 4.1 16.5 2 4.3 6.5 13.7 13.8 13.5 3.8-.1 6.5-2.7 11.5-2.7 4.8 0 7.3 2.7 11.6 2.7 7.4-.1 12.1-8.8 13.9-13.1-8.5-4-9.9-12.1-9.9-17.6zM43.8 11.6c4.2-4.9 3.8-9.4 3.7-11-3.7.2-7.9 2.5-10.3 5.3-2.7 3-4.2 6.7-3.9 10.9 4 .3 7.6-1.7 10.5-5.2z"/><text x="72" y="49" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="39" font-weight="700" fill="#fff" letter-spacing="-1">tv</text></svg>`
+                    bg: "linear-gradient(145deg, #1c1c1e 0%, #0a0a0c 100%)",
+                    packages: "com.apple.atve.sony.appletv,com.apple.atve.androidtv.appletv,appletv",
+                    fallbackLogo: `<svg viewBox="0 0 170 70" width="105" height="45"><path fill="#fff" d="M52.4 36.6c-.1-5.6 2.5-9.8 7.6-12.9-2.9-4.1-7.2-6.3-12.9-6.8-5.4-.4-11.3 3.2-13.5 3.2-2.3 0-7.5-3-11.6-3-8.6.1-17.6 6.7-17.6 20.2 0 6 2.2 12.4 4.1 16.5 2 4.3 6.5 13.7 13.8 13.5 3.8-.1 6.5-2.7 11.5-2.7 4.8 0 7.3 2.7 11.6 2.7 7.4-.1 12.1-8.8 13.9-13.1-8.5-4-9.9-12.1-9.9-17.6zM43.8 11.6c4.2-4.9 3.8-9.4 3.7-11-3.7.2-7.9 2.5-10.3 5.3-2.7 3-4.2 6.7-3.9 10.9 4 .3 7.6-1.7 10.5-5.2z"/><text x="72" y="49" font-family="sans-serif" font-size="39" font-weight="700" fill="#fff">tv</text></svg>`
                 },
                 {
                     name: "Disney+",
                     desc: "روائع ديزني، بيكسار، مارفل، ستار وورز، وناشيونال جيوغرافيك",
-                    bg: "radial-gradient(circle at 50% 15%, #0e3c68 0%, #040c1a 100%)",
-                    package: "com.disney.disneyplus.mea",
-                    logo: `<svg viewBox="0 0 200 85" width="130" height="56"><path d="M35 28 Q 95 -4 162 30" fill="none" stroke="#00e5ff" stroke-width="3.5" stroke-linecap="round"/><text x="24" y="60" font-family="Georgia, serif" font-size="38" font-weight="bold" fill="#ffffff" letter-spacing="0.5">Disney</text><text x="155" y="56" font-family="sans-serif" font-size="34" font-weight="800" fill="#00e5ff">+</text></svg>`
+                    bg: "linear-gradient(145deg, #0b2e59 0%, #040d1a 100%)",
+                    packages: "com.disney.disneyplus.mea,com.disney.disneyplus,disney",
+                    fallbackLogo: `<svg viewBox="0 0 200 85" width="125" height="52"><path d="M35 28 Q 95 -4 162 30" fill="none" stroke="#00e5ff" stroke-width="3.5" stroke-linecap="round"/><text x="24" y="60" font-family="Georgia, serif" font-size="38" font-weight="bold" fill="#ffffff">Disney</text><text x="155" y="56" font-family="sans-serif" font-size="34" font-weight="800" fill="#00e5ff">+</text></svg>`
                 },
                 {
                     name: "MBC شاهد",
                     desc: "أقوى المسلسلات العربية والأفلام الحصرية والرياضة المباشرة",
-                    bg: "radial-gradient(circle at 50% 0%, #162436 0%, #070b12 100%)",
-                    package: "net.mbc.shahid.tv",
-                    logo: `<svg viewBox="0 0 210 75" width="135" height="50"><circle cx="30" cy="38" r="7.5" fill="#00e676"/><circle cx="52" cy="38" r="7.5" fill="#00b0ff"/><circle cx="74" cy="38" r="7.5" fill="#00e5ff"/><text x="94" y="49" font-family="'Cairo', sans-serif" font-size="36" font-weight="900" fill="#ffffff">شاهد</text></svg>`
+                    bg: "linear-gradient(145deg, #111d2c 0%, #060a10 100%)",
+                    packages: "net.mbc.shahid.tv,net.mbc.shahid,shahid",
+                    fallbackLogo: `<svg viewBox="0 0 210 75" width="130" height="48"><circle cx="30" cy="38" r="7.5" fill="#00e676"/><circle cx="52" cy="38" r="7.5" fill="#00b0ff"/><circle cx="74" cy="38" r="7.5" fill="#00e5ff"/><text x="94" y="49" font-family="sans-serif" font-size="36" font-weight="800" fill="#ffffff">شاهد</text></svg>`
                 },
                 {
                     name: "stc tv",
                     desc: "القنوات التلفزيونية المباشرة والأفلام والمسلسلات العائلية",
-                    bg: "linear-gradient(135deg, #3c006b 0%, #18002e 100%)",
-                    package: "com.intigral.jawwytv.androidtv",
-                    logo: `<svg viewBox="0 0 190 70" width="125" height="48"><text x="18" y="48" font-family="sans-serif" font-size="42" font-weight="900" fill="#ffffff" letter-spacing="-1">stc</text><rect x="100" y="16" width="66" height="38" rx="9" fill="#ff2a5f"/><text x="115" y="43" font-family="sans-serif" font-size="27" font-weight="800" fill="#ffffff">tv</text></svg>`
+                    bg: "linear-gradient(145deg, #3c006b 0%, #150026 100%)",
+                    packages: "com.intigral.jawwytv.androidtv,com.stctv.app,jawwytv,stctv",
+                    fallbackLogo: `<svg viewBox="0 0 190 70" width="120" height="46"><text x="18" y="48" font-family="sans-serif" font-size="42" font-weight="900" fill="#ffffff">stc</text><rect x="100" y="16" width="66" height="38" rx="9" fill="#ff2a5f"/><text x="115" y="43" font-family="sans-serif" font-size="27" font-weight="800" fill="#ffffff">tv</text></svg>`
                 },
                 {
                     name: "Prime Video",
                     desc: "أفلام ومسلسلات أمازون الأصلية الحائزة على الجوائز",
-                    bg: "radial-gradient(circle at 50% 0%, #0077a3 0%, #051622 100%)",
-                    package: "com.amazon.amazonvideo.livingroom",
-                    logo: `<svg viewBox="0 0 220 80" width="135" height="52"><text x="20" y="40" font-family="sans-serif" font-size="31" font-weight="800" fill="#ffffff" letter-spacing="-0.5">prime video</text><path d="M48 52 Q 108 72 168 50" fill="none" stroke="#00b9ff" stroke-width="4.5" stroke-linecap="round"/><path d="M159 46 L171 49 L164 59" fill="none" stroke="#00b9ff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+                    bg: "linear-gradient(145deg, #00668c 0%, #04131c 100%)",
+                    packages: "com.amazon.amazonvideo.livingroom,com.amazon.avod,primevideo",
+                    fallbackLogo: `<svg viewBox="0 0 220 80" width="130" height="50"><text x="20" y="40" font-family="sans-serif" font-size="31" font-weight="800" fill="#ffffff">prime video</text><path d="M48 52 Q 108 72 168 50" fill="none" stroke="#00b9ff" stroke-width="4.5" stroke-linecap="round"/></svg>`
                 },
                 {
                     name: "NETFLIX",
                     desc: "الأفلام والمسلسلات العالمية والوثائقيات بدقة 4K Ultra HD",
-                    bg: "radial-gradient(circle at 50% 20%, #240406 0%, #080808 100%)",
-                    package: "com.netflix.ninja",
-                    logo: `<svg viewBox="0 0 220 70" width="135" height="46"><text x="16" y="50" font-family="Impact, 'Arial Black', sans-serif" font-size="46" fill="#e50914" letter-spacing="4">NETFLIX</text></svg>`
+                    bg: "linear-gradient(145deg, #1f0406 0%, #060606 100%)",
+                    packages: "com.netflix.ninja,com.netflix.mediaclient,netflix",
+                    fallbackLogo: `<svg viewBox="0 0 220 70" width="130" height="44"><text x="16" y="50" font-family="Impact, sans-serif" font-size="46" fill="#e50914" letter-spacing="4">NETFLIX</text></svg>`
                 },
                 {
                     name: "YouTube",
                     desc: "مشاهدة الفيديوهات والقنوات والبث المباشر بدقة 4K 60fps",
-                    bg: "radial-gradient(circle at 50% 0%, #282828 0%, #0c0c0c 100%)",
-                    package: "com.google.android.youtube.tv",
-                    logo: `<svg viewBox="0 0 230 70" width="140" height="46"><rect x="12" y="13" width="60" height="42" rx="12" fill="#ff0000"/><polygon points="36,24 36,44 54,34" fill="#ffffff"/><text x="82" y="46" font-family="sans-serif" font-size="33" font-weight="800" fill="#ffffff" letter-spacing="-1">YouTube</text></svg>`
+                    bg: "linear-gradient(145deg, #242424 0%, #0b0b0b 100%)",
+                    packages: "com.google.android.youtube.tv,com.google.android.youtube",
+                    fallbackLogo: `<svg viewBox="0 0 230 70" width="135" height="44"><rect x="12" y="13" width="60" height="42" rx="12" fill="#ff0000"/><polygon points="36,24 36,44 54,34" fill="#ffffff"/><text x="82" y="46" font-family="sans-serif" font-size="33" font-weight="800" fill="#ffffff">YouTube</text></svg>`
                 },
                 {
                     name: "YouTube Music",
                     desc: "الاستماع للمقاطع الصوتية والألبومات وقوائم التشغيل",
-                    bg: "radial-gradient(circle at 50% 0%, #2c1014 0%, #0a0a0c 100%)",
-                    package: "com.google.android.youtube.tvmusic",
-                    logo: `<svg viewBox="0 0 220 70" width="135" height="46"><circle cx="40" cy="35" r="23" fill="#ff0000"/><circle cx="40" cy="35" r="13" fill="none" stroke="#ffffff" stroke-width="2.5"/><polygon points="36,28 36,42 48,35" fill="#ffffff"/><text x="74" y="45" font-family="sans-serif" font-size="31" font-weight="800" fill="#ffffff">Music</text></svg>`
+                    bg: "linear-gradient(145deg, #290e12 0%, #09090b 100%)",
+                    packages: "com.google.android.youtube.tvmusic,com.google.android.apps.youtube.music",
+                    fallbackLogo: `<svg viewBox="0 0 220 70" width="130" height="44"><circle cx="40" cy="35" r="23" fill="#ff0000"/><circle cx="40" cy="35" r="13" fill="none" stroke="#ffffff" stroke-width="2.5"/><polygon points="36,28 36,42 48,35" fill="#ffffff"/><text x="74" y="45" font-family="sans-serif" font-size="31" font-weight="800" fill="#ffffff">Music</text></svg>`
                 },
                 {
                     name: "beIN CONNECT",
-                    desc: "البث المباشر للبطولات العالمية والدوريات الأوروبية الكبرى",
-                    bg: "linear-gradient(135deg, #3b0d54 0%, #150421 100%)",
-                    package: "ptv.bein.mena",
-                    logo: `<svg viewBox="0 0 220 75" width="140" height="48"><text x="14" y="46" font-family="sans-serif" font-size="38" font-weight="900" fill="#ffffff" letter-spacing="-1">beIN</text><rect x="106" y="23" width="100" height="28" rx="6" fill="#00e5ff"/><text x="114" y="42" font-family="sans-serif" font-size="18" font-weight="900" fill="#150421">CONNECT</text></svg>`
+                    desc: "البث المباشر للبطولات العالمية والدوريات الكبرى",
+                    bg: "linear-gradient(145deg, #3b0d54 0%, #12031c 100%)",
+                    packages: "ptv.bein.mena,com.bein.connect,bein",
+                    fallbackLogo: `<svg viewBox="0 0 220 75" width="135" height="46"><text x="14" y="46" font-family="sans-serif" font-size="38" font-weight="900" fill="#ffffff">beIN</text><rect x="106" y="23" width="100" height="28" rx="6" fill="#00e5ff"/><text x="114" y="42" font-family="sans-serif" font-size="18" font-weight="900" fill="#150421">CONNECT</text></svg>`
                 },
                 {
                     name: "File Manager +",
                     desc: "إدارة ملفات الشاشة والتخزين الخارجي وتثبيت الحزم",
-                    bg: "radial-gradient(circle at 50% 0%, #1e293b 0%, #090d14 100%)",
-                    package: "com.alphainventor.filemanager",
-                    logo: `<svg viewBox="0 0 180 75" width="115" height="48"><path d="M35 14 H68 L76 22 H140 C145 22 148 25 148 30 V58 C148 63 145 66 140 66 H35 C30 66 27 63 27 58 V22 C27 17 30 14 35 14 Z" fill="#ff9800"/><text x="68" y="55" font-family="sans-serif" font-size="36" font-weight="900" fill="#ffffff">F+</text></svg>`
+                    bg: "linear-gradient(145deg, #1e293b 0%, #090d14 100%)",
+                    packages: "com.alphainventor.filemanager,filemanager",
+                    fallbackLogo: `<svg viewBox="0 0 180 75" width="110" height="46"><path d="M35 14 H68 L76 22 H140 C145 22 148 25 148 30 V58 C148 63 145 66 140 66 H35 C30 66 27 63 27 58 V22 C27 17 30 14 35 14 Z" fill="#ff9800"/><text x="68" y="55" font-family="sans-serif" font-size="36" font-weight="900" fill="#ffffff">F+</text></svg>`
                 },
                 {
                     name: "Google Play",
                     desc: "متجر تطبيقات وألعاب نظام Android TV الرسمي",
-                    bg: "radial-gradient(circle at 50% 0%, #17253b 0%, #080c14 100%)",
-                    package: "com.android.vending",
-                    logo: `<svg viewBox="0 0 220 70" width="135" height="46"><polygon points="24,12 24,58 62,35" fill="#00e676"/><polygon points="24,12 49,39 62,35" fill="#ffea00"/><polygon points="24,58 49,31 62,35" fill="#ff1744"/><polygon points="24,12 24,58 42,35" fill="#00b0ff"/><text x="76" y="45" font-family="sans-serif" font-size="30" font-weight="800" fill="#ffffff">Google Play</text></svg>`
+                    bg: "linear-gradient(145deg, #152238 0%, #070b12 100%)",
+                    packages: "com.android.vending",
+                    fallbackLogo: `<svg viewBox="0 0 220 70" width="130" height="44"><polygon points="24,12 24,58 62,35" fill="#00e676"/><polygon points="24,12 49,39 62,35" fill="#ffea00"/><polygon points="24,58 49,31 62,35" fill="#ff1744"/><polygon points="24,12 24,58 42,35" fill="#00b0ff"/><text x="76" y="45" font-family="sans-serif" font-size="30" font-weight="800" fill="#ffffff">Google Play</text></svg>`
                 }
             ],
 
@@ -677,7 +697,91 @@
         };
 
         /* ==========================================================================
-           [10] قاموس تعريب أسماء الأندية
+           [11] بناء البطاقات وسحب الأيقونة الأصلية من نظام التلفزيون تلقائياً
+           ========================================================================== */
+        const appsContainer = document.getElementById('apps-container');
+        const hdmiContainer = document.getElementById('hdmi-container');
+
+        CONFIG.favoriteApps.forEach((app, index) => {
+            const wrap = document.createElement('div');
+            wrap.className = 'app-item-wrap';
+
+            const card = document.createElement('div');
+            card.className = 'app-card focusable';
+            card.style.background = app.bg;
+            card.dataset.row = "1";
+            card.dataset.col = index.toString();
+            card.dataset.title = app.name;
+            card.dataset.desc = app.desc;
+            card.innerHTML = app.fallbackLogo;
+
+            // فحص ما إذا كان الجسر الأصلي متاحاً لسحب أيقونة التطبيق الحقيقية من داخل نظام التلفزيون
+            if (window.AndroidTV && typeof window.AndroidTV.getAppIcon === 'function') {
+                setTimeout(() => {
+                    try {
+                        const rawIcon = window.AndroidTV.getAppIcon(app.packages);
+                        if (rawIcon && rawIcon.includes("data:image")) {
+                            const [type, src] = rawIcon.split("|");
+                            if (type === "BANNER") {
+                                card.innerHTML = `<img class="native-banner-img" src="${src}" alt="${app.name}">`;
+                            } else {
+                                card.innerHTML = `<img class="native-icon-img" src="${src}" alt="${app.name}">`;
+                            }
+                        }
+                    } catch (e) {}
+                }, 50 * index);
+            }
+
+            card.onclick = () => launchTvApp(app.packages);
+
+            const label = document.createElement('div');
+            label.className = 'app-label';
+            label.innerText = app.name;
+
+            wrap.appendChild(card);
+            wrap.appendChild(label);
+            appsContainer.appendChild(wrap);
+        });
+
+        CONFIG.hdmiInputs.forEach((hdmi, index) => {
+            const btn = document.createElement('div');
+            btn.className = 'hdmi-pill focusable';
+            btn.dataset.row = "2";
+            btn.dataset.col = index.toString();
+            btn.dataset.title = hdmi.name;
+            btn.dataset.desc = hdmi.desc;
+            btn.innerText = hdmi.name;
+            btn.onclick = () => switchSonyHdmi(index + 1);
+            hdmiContainer.appendChild(btn);
+        });
+
+        function launchTvApp(packagesCsv) {
+            if (window.AndroidTV && typeof window.AndroidTV.launchApp === 'function') {
+                window.AndroidTV.launchApp(packagesCsv);
+                return;
+            }
+            const firstPkg = packagesCsv.split(',')[0].trim();
+            window.location.href = `intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LEANBACK_LAUNCHER;package=${firstPkg};end`;
+        }
+
+        function openAndroidSettings() {
+            if (window.AndroidTV && typeof window.AndroidTV.openSettings === 'function') {
+                window.AndroidTV.openSettings();
+                return;
+            }
+            window.location.href = "intent:#Intent;action=android.settings.SETTINGS;end";
+        }
+
+        function switchSonyHdmi(hdmiNumber) {
+            if (window.AndroidTV && typeof window.AndroidTV.switchHdmi === 'function') {
+                window.AndroidTV.switchHdmi(hdmiNumber);
+                return;
+            }
+            window.location.href = `intent://android.media.tv/passthrough/com.sony.dtv.tvinput.external/.ExternalTvInputService/HW${hdmiNumber}#Intent;scheme=content;end`;
+        }
+
+        /* ==========================================================================
+           [12] قاموس تعريب الأندية وجلب المباريات المباشرة
            ========================================================================== */
         const TEAM_TRANSLATIONS = {
             "Al-Hilal": "الهلال", "Al Hilal": "الهلال",
@@ -721,90 +825,13 @@
             return TEAM_TRANSLATIONS[englishName.trim()] || englishName;
         }
 
-        /* ==========================================================================
-           [11] بناء الأيقونات العائمة وأزرار الـ HDMI
-           ========================================================================== */
-        const appsContainer = document.getElementById('apps-container');
-        const hdmiContainer = document.getElementById('hdmi-container');
-
-        CONFIG.favoriteApps.forEach((app, index) => {
-            const wrap = document.createElement('div');
-            wrap.className = 'app-item-wrap';
-
-            const card = document.createElement('div');
-            card.className = 'app-card focusable';
-            card.style.background = app.bg;
-            card.dataset.row = "1";
-            card.dataset.col = index.toString();
-            card.dataset.title = app.name;
-            card.dataset.desc = app.desc;
-
-            // إذا كان التطبيق يعمل عبر APK الجسر الأصلي (GitHub Actions)، يسحب أيقونة التلفزيون الأصلية 4K أو يعرض الشعار الرسمي
-            card.innerHTML = app.logo;
-            card.onclick = () => launchTvApp(app.package);
-
-            const label = document.createElement('div');
-            label.className = 'app-label';
-            label.innerText = app.name;
-
-            wrap.appendChild(card);
-            wrap.appendChild(label);
-            appsContainer.appendChild(wrap);
-        });
-
-        CONFIG.hdmiInputs.forEach((hdmi, index) => {
-            const btn = document.createElement('div');
-            btn.className = 'hdmi-pill focusable';
-            btn.dataset.row = "2";
-            btn.dataset.col = index.toString();
-            btn.dataset.title = hdmi.name;
-            btn.dataset.desc = hdmi.desc;
-            btn.innerText = hdmi.name;
-            btn.onclick = () => switchSonyHdmi(index + 1);
-            hdmiContainer.appendChild(btn);
-        });
-
-        /* ==========================================================================
-           [12] دالة تشغيل التطبيقات بدون نافذة "Open with Browser"
-           ========================================================================== */
-        function launchTvApp(packageName) {
-            // 1. إذا كان يعمل داخل تطبيقنا الأصلي المبني عبر GitHub Actions، يفتح التطبيق فوراً عبر الجسر الأصلي!
-            if (window.AndroidTV && typeof window.AndroidTV.launchApp === 'function') {
-                window.AndroidTV.launchApp(packageName);
-                return;
-            }
-            // 2. أمر LEANBACK_LAUNCHER الخاص بتلفزيونات أندرويد (بدون scheme=https لمنع ظهور المتصفحات)
-            window.location.href = `intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LEANBACK_LAUNCHER;package=${packageName};end`;
-        }
-
-        function openAndroidSettings() {
-            if (window.AndroidTV && typeof window.AndroidTV.openSettings === 'function') {
-                window.AndroidTV.openSettings();
-                return;
-            }
-            window.location.href = "intent:#Intent;action=android.settings.SETTINGS;end";
-        }
-
-        function switchSonyHdmi(hdmiNumber) {
-            if (window.AndroidTV && typeof window.AndroidTV.switchHdmi === 'function') {
-                window.AndroidTV.switchHdmi(hdmiNumber);
-                return;
-            }
-            window.location.href = `intent://android.media.tv/passthrough/com.sony.dtv.tvinput.external/.ExternalTvInputService/HW${hdmiNumber}#Intent;scheme=content;end`;
-        }
-
-        /* ==========================================================================
-           [13] جلب المباريات المباشرة (الدوري السعودي والإنجليزي)
-           ========================================================================== */
         async function fetchLiveMatches() {
             const uiList = document.getElementById('ui-matches-list');
             const ssList = document.getElementById('ss-matches-list');
-
             const leagues = [
                 { code: 'sau.1', label: 'السعودي' },
                 { code: 'eng.1', label: 'الإنجليزي' }
             ];
-
             let allMatchesHtml = [];
 
             for (const lg of leagues) {
@@ -838,7 +865,7 @@
                             const matchDate = new Date(ev.date);
                             const matchTime = matchDate.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit', hour12: true });
                             centerInfo = `<span class="score-box" style="font-size:0.78rem;">ضد</span>`;
-                            timeOrStatusBadge = `<span style="color:#38bdf8; font-size:0.82rem;">🕒 ${matchTime}</span>`;
+                            timeOrStatusBadge = `<span style="color:var(--accent-color); font-size:0.82rem;">🕒 ${matchTime}</span>`;
                         }
 
                         const homeImgTag = homeLogo ? `<img class="team-logo" src="${homeLogo}" alt="" onerror="this.style.display='none'">` : '';
@@ -856,9 +883,7 @@
                             </div>
                         `);
                     });
-                } catch (err) {
-                    console.log("Error fetching league:", lg.label);
-                }
+                } catch (err) {}
             }
 
             const finalHtml = allMatchesHtml.length > 0
@@ -870,7 +895,7 @@
         }
 
         /* ==========================================================================
-           [14] نظام التحكم بالريموت وتحديث الوقت والصلاة والطقس
+           [13] التنقل بالريموت وتحديث الوقت والصلاة والطقس
            ========================================================================== */
         let currentRow = 1;
         let currentCol = 0;
@@ -911,17 +936,6 @@
                 if (focusedEl) focusedEl.click();
             }
         });
-
-        function updateTimeOfDayBackground() {
-            const hour = new Date().getHours();
-            let bgUrl = CONFIG.timeBackgrounds.night;
-            if (hour >= 4 && hour < 7) bgUrl = CONFIG.timeBackgrounds.fajr;
-            else if (hour >= 7 && hour < 17) bgUrl = CONFIG.timeBackgrounds.day;
-            else if (hour >= 17 && hour < 19) bgUrl = CONFIG.timeBackgrounds.sunset;
-
-            document.getElementById('bg-layer').style.backgroundImage = `url('${bgUrl}')`;
-            document.getElementById('screensaver').style.backgroundImage = `url('${bgUrl}')`;
-        }
 
         function updateClockAndDate() {
             const now = new Date();
@@ -1009,7 +1023,6 @@
             idleTimer = setTimeout(() => toggleScreensaver(true), CONFIG.inactivityTimeoutSeconds * 1000);
         }
 
-        updateTimeOfDayBackground();
         updateClockAndDate();
         updateFocus();
         fetchPrayerTimes();
@@ -1019,7 +1032,7 @@
 
         setInterval(updateClockAndDate, 1000);
         setInterval(fetchLiveMatches, 60000);
-        setInterval(() => { fetchPrayerTimes(); fetchWeather(); updateTimeOfDayBackground(); }, 600000);
+        setInterval(() => { fetchPrayerTimes(); fetchWeather(); }, 600000);
     </script>
 </body>
 </html>
