@@ -1,9 +1,10 @@
 {
   "name": "Sony Apple TV UI",
-  "short_name": "SonyUI",
+  "short_name": "SonyTV",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#070709",
   "theme_color": "#070709",
-  "orientation": "landscape"
+  "orientation": "landscape",
+  "description": "واجهة تفاعلية ذكية لتلفزيون سوني بتصميم Apple TV ومباريات مباشرة ومواقيت الصلاة"
 }
