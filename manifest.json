@@ -6,5 +6,17 @@
   "background_color": "#070709",
   "theme_color": "#070709",
   "orientation": "landscape",
-  "description": "واجهة تفاعلية ذكية لتلفزيون سوني بتصميم Apple TV ومباريات مباشرة ومواقيت الصلاة"
+  "description": "واجهة تفاعلية ذكية لتلفزيون سوني بتصميم Apple TV ومباريات مباشرة ومواقيت الصلاة",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://via.placeholder.com/512",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
