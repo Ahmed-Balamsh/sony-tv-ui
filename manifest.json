@@ -1,0 +1,9 @@
+{
+  "name": "Sony Apple TV UI",
+  "short_name": "SonyUI",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#070709",
+  "theme_color": "#070709",
+  "orientation": "landscape"
+}
